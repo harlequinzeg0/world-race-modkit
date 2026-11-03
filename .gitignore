@@ -1,0 +1,9 @@
+extracted/
+re/
+extract.log
+__pycache__/
+*.pyc
+.superpowers/
+.claude/
+.pytest_cache/
+base_mod/target/

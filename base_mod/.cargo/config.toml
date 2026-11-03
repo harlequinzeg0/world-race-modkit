@@ -1,0 +1,7 @@
+# The game is a 32-bit process, and `extern "thiscall"` exists only on this target, so tests
+# run here too. The static CRT means the DLL needs no redistributable on the player's machine.
+[build]
+target = "i686-pc-windows-msvc"
+
+[target.i686-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
