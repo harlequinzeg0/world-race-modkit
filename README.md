@@ -1,6 +1,6 @@
 # World Race Mod Manager
 
-A mod manager and mod-making tool for Hot Wheels World Race (PC, 2003). Players add mod zips, choose which are active, and press Play. Modders start from a stock car, edit it in normal tools, and build a zip to share.
+A mod manager and mod-making tool for the LGU Release by Bladez1992 of Hot Wheels World Race (PC, 2003). Players add mod zips, choose which are active, and press Play. Modders start from a stock car, edit it in normal tools, and build a zip to share.
 
 You need your own copy of the game. This project contains no game files.
 
