@@ -58,7 +58,7 @@ uv run --script worldrace.py recover --game PATH
 
 ## Status
 
-Works now: texture, physics and text mods, new cars beside the stock ones, new car bodies through a Blender add-on, car icons, new teams, new cars and teams as AI opponents, zips, profiles, and Play on the unchanged stock EXE.
+Works now: texture, physics and text mods, new cars beside the stock ones, new car bodies through a Blender 4.5 add-on, car icons, new teams, new cars and teams as AI opponents, zips, profiles, and Play on the unchanged stock EXE.
 
 Not done yet: custom wheel models, effects refitted to a new body, new collision shapes, and new tracks. Tracks depend on decoding the game's track format.
 
