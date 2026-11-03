@@ -7,3 +7,4 @@ __pycache__/
 .claude/
 .pytest_cache/
 base_mod/target/
+docs/FINDINGS.md
