@@ -1,8 +1,10 @@
+import io
 import os
 import struct
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from wrmod.bark import Archive
 from wrmod.bed import Bed, Box, read_bed, write_bed
@@ -121,12 +123,66 @@ def test_check_icon_refuses_dxt1():
         check_icon("neon", wrong)
 
 
-def test_a_sheet_that_is_not_dxt5_is_refused():
+RED = (255, 0, 0, 255)
+BLUE = (0, 0, 255, 255)
+# NitroXFueled sheets keep a stock header that says 128x128 DXT5, whatever image they hold.
+LYING_HEADER = dds_to_bog(dxt5_dds(128, 128, bytes(32 * 32 * BLOCK)), None)[:HEADER_SIZE]
+
+
+def encoded(image, **options):
+    out = io.BytesIO()
+    image.save(out, **options)
+    return out.getvalue()
+
+
+def hd_sheet(size=(1024, 1024), colour=BLUE):
+    return LYING_HEADER + encoded(Image.new("RGBA", size, colour), format="PNG")
+
+
+def red_icon():
+    # Opaque alpha, then both end colours pure red in RGB565, so every pixel decodes to RED.
+    solid = bytes([255, 255]) + bytes(6) + struct.pack("<HHI", 0xF800, 0xF800, 0)
+    return dds_to_bog(dxt5_dds(ICON_WIDTH, ICON_HEIGHT, solid * (24 * 12)), None)
+
+
+def image_of(bog):
+    return Image.open(io.BytesIO(bog[HEADER_SIZE:])).convert("RGBA")
+
+
+def test_an_hd_sheet_grows_at_its_own_scale():
+    bog, new_bed = add_icons(hd_sheet(), bed(), {"neon": red_icon()})
+    image = image_of(bog)
+    assert image.size == (1024, 2048)
+    assert image.getpixel((5, 5)) == BLUE
+    # Boxes stay in the sheet's own units, and the art is twice their size here.
+    assert read_bed(new_bed).find("neon").pixels(512, 1024) == (0, 512, 96, 48)
+    assert image.getpixel((0, 1024)) == RED and image.getpixel((191, 1119)) == RED
+    assert image.getpixel((192, 1024))[3] == 0
+
+
+def test_an_hd_sheet_keeps_its_header_and_is_written_as_png():
+    bog, _ = add_icons(hd_sheet(), bed(), {"neon": red_icon()})
+    assert bog[:HEADER_SIZE] == LYING_HEADER
+    assert bog[HEADER_SIZE:HEADER_SIZE + 4] == b"\x89PNG"
+
+
+def test_an_hd_sheet_that_is_not_square():
+    bog, new_bed = add_icons(hd_sheet((2048, 1024)), write_bed(Bed("s.tga", 512, 256, [])), {"neon": red_icon()})
+    assert image_of(bog).size == (2048, 2048)
+    assert read_bed(new_bed).height == 512
+    assert image_of(bog).getpixel((383, 1024 + 191)) == RED
+
+
+def test_a_dxt1_sheet_is_read_as_an_image():
     head = bytearray(dxt5_dds(512, 512, b""))
     head[84:88] = b"DXT1"
-    wrong = dds_to_bog(bytes(head) + bytes(128 * 128 * 8), None)
-    with pytest.raises(IconError, match="DXT5"):
-        add_icons(wrong, bed(), {"a": icon()})
+    dxt1 = dds_to_bog(bytes(head) + bytes(128 * 128 * 8), None)
+    assert image_of(add_icons(dxt1, bed(), {"a": red_icon()})[0]).size == (512, 1024)
+
+
+def test_a_sheet_that_is_not_an_image_is_refused():
+    with pytest.raises(IconError, match="sheet"):
+        add_icons(LYING_HEADER + b"not an image", bed(), {"a": red_icon()})
 
 
 def test_a_new_name_already_on_the_sheet_is_refused():

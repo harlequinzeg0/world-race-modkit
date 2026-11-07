@@ -1,16 +1,22 @@
 """Cells on shared sprite sheets: car icons, team logos and team names.
 
 The game draws each from one sheet and finds a box by name. Stock art fills those sheets, so added
-cells go on new rows under it. Compressed blocks copy without decoding, which keeps the tool free
-of an image library. Lower mip levels would need decoding, so a grown sheet has one level. Its
-stock art then loses them too, but the game draws this art at about its full size.
+cells go on new rows under it. On a stock sheet, compressed blocks copy without decoding, so the
+stock art keeps its exact pixels. Lower mip levels would need decoding, so a grown sheet has one
+level. Its stock art then loses them too, but the game draws this art at about its full size.
+
+Overhauls such as NitroXFueled replace sheets with bigger images in other formats, and keep a
+header that no longer matches. Those sheets are decoded, grown, and written back as PNG.
 """
+import io
 import math
 import re
 import struct
 
+from PIL import Image
+
 from .bed import Box, read_bed, write_bed
-from .bog import DDS_HEADER_SIZE, HEADER_SIZE, TYPE_DXT5, BogError, dds_to_bog, parse_header
+from .bog import DDS_HEADER_SIZE, HEADER_SIZE, TYPE_DXT5, BogError, bog_to_dds, dds_to_bog, parse_header
 
 ICON_SHEET = "frontend/car_icons"
 HIGHLIGHT_SHEET = "frontend/car_icons_highlights"
@@ -141,28 +147,84 @@ def _grown_height(sheet_height, new_rows, cell_height):
     return height
 
 
-def add_icons(sheet_bog, sheet_bed, icons, cell=ICON_CELL):
-    """The sheet and its boxes with `{box name: art}` added. Stock boxes stay on their pixels."""
-    header = _read_sheet(sheet_bog)
-    bed = read_bed(sheet_bed)
+def _is_block_sheet(bog, header):
+    """A stock sheet: one DXT5 image that matches its header, so its blocks can be copied."""
+    dds = bog[HEADER_SIZE:HEADER_SIZE + DDS_HEADER_SIZE]
+    if header.type != TYPE_DXT5 or len(dds) < DDS_HEADER_SIZE or dds[:4] != b"DDS " or dds[84:88] != b"DXT5":
+        return False
+    height, width = struct.unpack_from("<II", dds, 12)
+    return (width, height) == (header.width, header.height)
+
+
+def _grow_bed(bed, width, height, names, cell):
+    """Adds a box per name on new rows under a sheet of this size, and keeps stock boxes on their
+    pixels. Returns the grown height and each new box's left and top."""
     cell_width, cell_height = cell
-    columns = header.width // cell_width
-    height = _grown_height(header.height, math.ceil(len(icons) / columns), cell_height)
+    columns = width // cell_width
+    grown = _grown_height(height, math.ceil(len(names) / columns), cell_height)
+    for box in bed.boxes:
+        box.points = [(x, round(y * height / grown)) for x, y in box.points]
+    places = {}
+    for number, name in enumerate(names):
+        places[name] = (number % columns * cell_width, height + number // columns * cell_height)
+        bed.boxes.append(Box.rectangle(name, *places[name], cell_width, cell_height, width, grown))
+    bed.height = grown
+    return grown, places
+
+
+def _add_blocks(sheet_bog, header, bed, icons, cell):
+    height, places = _grow_bed(bed, header.width, header.height, list(icons), cell)
     stride = _stride(header.width)
     pixels = bytearray(_block_rows(height) * stride)
     pixels[:_block_rows(header.height) * stride] = _top_level(sheet_bog, header.width, header.height)
-    for box in bed.boxes:
-        box.points = [(x, round(y * header.height / height)) for x, y in box.points]
+    cell_width, cell_height = cell
     row_bytes = _stride(cell_width)
-    for number, (name, icon) in enumerate(icons.items()):
-        check_icon(name, icon, cell)
-        if bed.find(name) is not None:
-            raise IconError(f"The sheet already has a box named {name}")
-        left, top = number % columns * cell_width, header.height + number // columns * cell_height
+    for name, icon in icons.items():
+        left, top = places[name]
         art = _top_level(icon, cell_width, cell_height)
         for row in range(_block_rows(cell_height)):
             at = (_block_rows(top) + row) * stride + _stride(left)
             pixels[at:at + row_bytes] = art[row * row_bytes:(row + 1) * row_bytes]
-        bed.boxes.append(Box.rectangle(name, left, top, cell_width, cell_height, header.width, height))
-    bed.height = height
     return dds_to_bog(dxt5_dds(header.width, height, bytes(pixels)), header.raw), write_bed(bed)
+
+
+def bog_image(bog, what):
+    """The picture inside a BOG, whatever its header says, as RGBA."""
+    try:
+        return Image.open(io.BytesIO(bog_to_dds(bog))).convert("RGBA")
+    except (BogError, OSError, ValueError) as e:
+        raise IconError(f"{what} is not an image the tool can read: {e}") from e
+
+
+def _add_to_image(sheet_bog, header, bed, icons, cell):
+    """Boxes stay in the .bed's own units, and the art is scaled to the image's size."""
+    sheet = bog_image(sheet_bog, "The sheet")
+    x_scale, y_scale = sheet.width / bed.width, sheet.height / bed.height
+    height, places = _grow_bed(bed, bed.width, bed.height, list(icons), cell)
+    grown = Image.new("RGBA", (sheet.width, round(height * y_scale)))
+    grown.paste(sheet, (0, 0))
+    size = (round(cell[0] * x_scale), round(cell[1] * y_scale))
+    for name, icon in icons.items():
+        left, top = places[name]
+        art = bog_image(icon, f"The art for {name}").resize(size, Image.Resampling.LANCZOS)
+        grown.paste(art, (round(left * x_scale), round(top * y_scale)))
+    png = io.BytesIO()
+    grown.save(png, format="PNG")
+    # The game loads the image after the header whatever the header says, as overhauls rely on.
+    return header.raw + png.getvalue(), write_bed(bed)
+
+
+def add_icons(sheet_bog, sheet_bed, icons, cell=ICON_CELL):
+    """The sheet and its boxes with `{box name: art}` added. Stock boxes stay on their pixels."""
+    try:
+        header = parse_header(sheet_bog)
+    except BogError as e:
+        raise IconError(f"The sheet is not a texture: {e}") from e
+    bed = read_bed(sheet_bed)
+    for name, icon in icons.items():
+        check_icon(name, icon, cell)
+        if bed.find(name) is not None:
+            raise IconError(f"The sheet already has a box named {name}")
+    if _is_block_sheet(sheet_bog, header):
+        return _add_blocks(sheet_bog, header, bed, icons, cell)
+    return _add_to_image(sheet_bog, header, bed, icons, cell)

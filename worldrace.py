@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["PySide6-Essentials"]
+# dependencies = ["PySide6-Essentials", "Pillow"]
 # ///
 """World Race Mod Manager entry point. With no arguments it opens the window."""
 import sys

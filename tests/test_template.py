@@ -50,7 +50,7 @@ class StubArchive:
 
 @pytest.fixture
 def stock(monkeypatch):
-    monkeypatch.setattr(template, "Archive", StubArchive)
+    monkeypatch.setattr(template, "game_files", StubArchive)
 
 
 @pytest.fixture

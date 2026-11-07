@@ -21,7 +21,7 @@ def errors():
 
 @pytest.fixture
 def tab(qapp, monkeypatch, errors):
-    monkeypatch.setattr(template, "Archive", StubArchive)
+    monkeypatch.setattr(template, "game_files", StubArchive)
     widget = MakeTab("game")
     widget.show_error = errors.append
     return widget

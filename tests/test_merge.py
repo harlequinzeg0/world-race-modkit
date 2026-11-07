@@ -1,13 +1,15 @@
+import io
 import json
 import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from wrmod import merge
 from wrmod.bed import Bed, Box, read_bed, write_bed
-from wrmod.bog import dds_to_bog, parse_header
+from wrmod.bog import HEADER_SIZE, dds_to_bog, parse_header
 from wrmod.gameinfo import RETAIL_SHA256, STOCK_EXE
 from wrmod.icons import HIGHLIGHT_SHEET, ICON_SHEET, TEAM_LOGO_SHEET, TEAM_NAME_SHEET, dxt5_dds
 from wrmod.merge import MergeError, build_session
@@ -100,7 +102,7 @@ def stock(tmp_path, monkeypatch):
     game = tmp_path / "game"
     game.mkdir()
     (game / STOCK_EXE).write_bytes(b"exe")
-    monkeypatch.setattr(merge, "Archive", FakeArchive)
+    monkeypatch.setattr(merge, "game_files", FakeArchive)
     monkeypatch.setattr(merge, "load_string_ids", lambda exe: {"X": 0})
     return game
 
@@ -228,6 +230,97 @@ def test_a_screen_with_no_still_keeps_the_base_clip():
     entry = '<car_rep ID="ballistic" TeamLogo="x" Movie="movies/cars/road/ballis" CarName="C"><BlokeHead/></car_rep>'
     car = {"based_on": "ballistic", "internal_name": "neon"}
     assert 'Movie="movies/cars/road/ballis"' in merge._screen_entry(entry, car, "logo", set(), set())
+
+
+GARAGE_COLOURS = {team: (40 * number, 10, 10) for number, team in enumerate(TEAMS)}
+RED = (255, 0, 0)
+
+
+def picture_bog(image):
+    out = io.BytesIO()
+    image.save(out, format="PNG")
+    return dds_to_bog(dxt5_dds(4, 4, bytes(16)), None)[:HEADER_SIZE] + out.getvalue()
+
+
+def picture_of(bog):
+    return Image.open(io.BytesIO(bog[HEADER_SIZE:])).convert("RGB")
+
+
+@pytest.fixture
+def overhaul(stock, monkeypatch):
+    """Like NitroXFueled: each car's first frame is its team's garage, and its clip is a render."""
+    text = FILES["frontend/car_select_screen.xml"].decode("latin1")
+    for index, name in enumerate(STOCK_ORDER):
+        text = text.replace(f'Texture="frontend/{name}_movie"', f'Texture="frontend/garage/{TEAMS[index // 7]}"')
+    monkeypatch.setitem(FILES, "frontend/car_select_screen.xml", text.encode("latin1"))
+    for team, colour in GARAGE_COLOURS.items():
+        monkeypatch.setitem(FILES, f"frontend/garage/{team}.bog", picture_bog(Image.new("RGB", (200, 100), colour)))
+    return stock
+
+
+def red_still():
+    return {"frontend/neon_movie.bog": picture_bog(Image.new("RGB", (256, 128), RED))}
+
+
+def test_on_an_overhaul_an_added_car_shows_its_still_in_its_team_garage(overhaul, tmp_path):
+    build(overhaul, [{**car_mod("neon"), "blobs": red_still()}], tmp_path)
+    rep = neon_rep(tmp_path)
+    assert 'Texture="frontend/neon_garage"' in rep and 'Movie=""' in rep
+    garage = picture_of((tmp_path / "session/generated/frontend/neon_garage.bog").read_bytes())
+    assert garage.size == (200, 100)
+    assert garage.getpixel((5, 5)) == GARAGE_COLOURS["road_beasts"]
+    # The overhaul's renders park the car at the front right.
+    assert garage.getpixel((147, 68)) == RED
+
+
+def test_on_an_overhaul_an_added_team_uses_its_base_team_garage(overhaul, tmp_path):
+    mod = team_mod(cars=("neon",))
+    build(overhaul, [{**mod, "blobs": red_still()}], tmp_path)
+    garage = picture_of((tmp_path / "session/generated/frontend/neon_garage.bog").read_bytes())
+    assert garage.getpixel((5, 5)) == GARAGE_COLOURS["road_beasts"]
+
+
+def test_on_an_overhaul_a_car_with_no_still_keeps_the_plain_garage(overhaul, tmp_path):
+    build(overhaul, [car_mod("neon")], tmp_path)
+    assert 'Texture="frontend/garage/road_beasts"' in neon_rep(tmp_path)
+    assert not (tmp_path / "session/generated/frontend/neon_garage.bog").exists()
+
+
+def test_team_logos_follow_names_when_car_info_is_reordered(stock, tmp_path, monkeypatch):
+    # NitroXFueled lists wave_rippers first in car_info.xml, and keeps the stock order on screen.
+    order = STOCK_ORDER[21:28] + STOCK_ORDER[:21] + STOCK_ORDER[28:]
+    stock_index = {name: index for index, name in enumerate(STOCK_ORDER)}
+    text = "<Cars>\r\n   " + "\r\n   ".join(stock_car(stock_index[n], n) for n in order) + "\r\n</Cars>"
+    monkeypatch.setitem(FILES, "misc/cache/car_info.xml", text.encode("latin1"))
+    build(stock, [car_mod("neon")], tmp_path)
+    assert 'TeamLogo="RoadBeasts"' in neon_rep(tmp_path)
+
+
+CLIP = {"nmovies/cars/neon.bik": b"BIKi"}
+
+
+def test_on_an_overhaul_a_car_with_its_own_clip_plays_it(overhaul, tmp_path):
+    build(overhaul, [{**car_mod("neon"), "blobs": {**red_still(), **CLIP}}], tmp_path)
+    assert 'Movie="movies/cars/neon"' in neon_rep(tmp_path)
+    assert 'Texture="frontend/neon_garage"' in neon_rep(tmp_path)
+    assert 'Movie="movies/cars/neon"' in neon_rep(tmp_path, "frontend/multi_player_car_select.xml")
+
+
+def test_on_an_overhaul_a_clip_needs_no_still(overhaul, tmp_path):
+    build(overhaul, [{**car_mod("neon"), "blobs": CLIP}], tmp_path)
+    assert 'Movie="movies/cars/neon"' in neon_rep(tmp_path)
+    assert 'Texture="frontend/garage/road_beasts"' in neon_rep(tmp_path)
+
+
+def test_stock_keeps_the_still_even_with_a_clip(stock, tmp_path):
+    build(stock, [{**car_mod("neon"), "blobs": {**red_still(), **CLIP}}], tmp_path)
+    assert 'Movie=""' in neon_rep(tmp_path)
+
+
+def test_a_stock_screen_makes_no_garage(stock, tmp_path):
+    build(stock, [{**car_mod("neon"), "blobs": red_still()}], tmp_path)
+    assert "frontend/neon_movie" in neon_rep(tmp_path)
+    assert not (tmp_path / "session/generated/frontend/neon_garage.bog").exists()
 
 
 def test_screen_entry_uses_the_new_name_and_movie(stock, tmp_path):

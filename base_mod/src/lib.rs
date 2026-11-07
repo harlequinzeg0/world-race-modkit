@@ -63,6 +63,7 @@ fn install(session: &'static Session) -> Result<(), String> {
     hooks.extend(saves::hooks(&session.save_dir)?);
     hooks.extend(text::hooks(session));
     let mut patches = fixes::patches();
+    patches.extend(files::patches());
     if !session.teams.is_empty() {
         let (car_hooks, car_patches) = cars::parts(session)?;
         hooks.extend(car_hooks);
@@ -84,7 +85,7 @@ fn start() {
     };
     let session = SESSION.get_or_init(|| session);
     log::init(&session.log_path);
-    log::line(&format!("session loaded, {} roots", session.roots.len()));
+    log::line(&format!("WRSE {}, session loaded, {} roots", env!("CARGO_PKG_VERSION"), session.roots.len()));
     if let Err(message) = install(session) {
         fatal(&message);
     }

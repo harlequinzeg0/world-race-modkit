@@ -5,6 +5,7 @@ from hashlib import sha256
 from pathlib import Path
 
 from . import addon, bark, bog, deploy, modpack, profiles, store, template
+from .gamefiles import game_files
 from .gameinfo import GameError, check_game_folder
 
 
@@ -20,9 +21,8 @@ def _game(args):
 
 
 def _cmd_list(args):
-    root = bark.read_index(_game(args) / "harchive.bah")
-    for entry in bark.walk_files(root):
-        print(entry.path)
+    for path in game_files(_game(args)).paths():
+        print(path)
 
 
 def _cmd_extract(args):

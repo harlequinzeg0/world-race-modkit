@@ -97,6 +97,14 @@ The steady red lamps on the body are part of the skin texture, so paint those.
 
 **Car select picture:** a new car shows a still picture, not a moving clip, on the single player screen. The multiplayer screen has no still, so it plays the base car's clip. Edit `textures/frontend/<new name>_movie.bog.dds`, then save it as DXT1 with mipmaps at 256×128. It starts as the base car's picture. The driver's portrait covers the left of the picture and the right edge fades, so keep your car near the middle.
 
+On an overhaul such as NitroXFueled, the other cars play a full-screen render in their team's garage. There the tool puts your still on the garage of your car's team (for a new team, its base team), where the renders park the cars. A DXT5 still with a transparent background blends into the garage. An opaque one shows as a picture.
+
+**Car render clip (NitroXFueled):** to give your car a render like the overhaul's own cars, add a Bink clip to your project at `files/nmovies/cars/<new name>.bik`. On an overhaul, car select plays it over the garage, and the multiplayer car select plays it too. On the stock game the tool ignores it and shows your still, so the clip is optional.
+
+- The game has the Bink 1 player (`binkw32.dll`), so the clip must be Bink 1. RAD Video Tools makes Bink 1 files.
+- Match the overhaul's clips: 2048×1024, 60 fps, about 2 seconds. They show the car parked at the front right of the team garage, and the frame fills the screen. Render your car in its team's garage the same way.
+- A mod can also replace any stock clip by using its path under `files/nmovies/`, for example `files/nmovies/cars/wave/deora.bik`.
+
 To edit the wheel numbers by hand, see `WHEELOFFSET`, `WHEELRADIUS` and `WHEELWIDTH` in the `.params` file. In `WHEELOFFSET X Y Z`, X is left (-) and right (+), Y is up, and Z is forward. The visible radius is about 0.87 × `WHEELRADIUS`, and the visible width is about `WHEELWIDTH`.
 
 **Car icon:** the icon shows in the Team Select bar, on Results and in the League standings. A new car project has two files to paint in `textures/frontend/`, and both start as the base car's. If you opened an older project, the tool adds them when you open it.

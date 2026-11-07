@@ -20,7 +20,7 @@ from hashlib import sha256
 from pathlib import Path
 
 from .gameinfo import RETAIL_SHA256
-from .bark import Archive
+from .gamefiles import game_files
 from .bed import BedError
 from .bog import BogError, bog_to_dds, dds_to_bog
 from .icons import (
@@ -71,7 +71,7 @@ class ProjectError(Exception):
 
 
 def list_stock_cars(game):
-    text = Archive(game).read(CAR_INFO).decode("latin-1")
+    text = game_files(game).read(CAR_INFO).decode("latin-1")
     return re.findall(r'<CAR\s+internal_name="([^"]+)"', text)
 
 
@@ -129,7 +129,7 @@ def add_missing_art(game, project):
     cars, teams = _read_list(project, CARS), _read_list(project, TEAMS)
     if not cars and not teams:
         return
-    archive = Archive(game)
+    archive = game_files(game)
     for car in cars:
         _export_icons(project, archive, car["based_on"], car["internal_name"])
     for team in teams:
@@ -156,7 +156,7 @@ def add_team(game, project, display_name, base_team):
         car["team"] = team_id
         car["ai_car"] = True
     team = {"id": team_id, "display_name": display_name.strip(), "leader": cars[0]["internal_name"], "base_team": base_team}
-    _export_team_art(project, Archive(game), base_team, team_id)
+    _export_team_art(project, game_files(game), base_team, team_id)
     _write(project / CARS, json.dumps(cars, indent=2).encode())
     _write(project / TEAMS, json.dumps([team], indent=2).encode())
     return team_id
@@ -183,7 +183,7 @@ def _write_details(project, car):
 
 def create_car_project(game, car, dest, progress=None):
     dest = Path(dest)
-    archive = Archive(game)
+    archive = game_files(game)
     if car not in list_stock_cars(game):
         raise ProjectError(f"No stock car named {car}")
     if dest.exists():
@@ -224,7 +224,7 @@ def _base_name_path(path, base, new):
 
 def create_new_car_project(game, base, new_name, team, dest, progress=None):
     dest = Path(dest)
-    archive = Archive(game)
+    archive = game_files(game)
     stock_cars = list_stock_cars(game)
     if base not in stock_cars:
         raise ProjectError(f"No stock car named {base}")
@@ -313,7 +313,7 @@ def _texture_changes(project):
 
 def changed_files(project, game):
     project = Path(project)
-    return sorted({*_file_changes(project, Archive(game)), *_texture_changes(project)})
+    return sorted({*_file_changes(project, game_files(game)), *_texture_changes(project)})
 
 
 def _texture_bog(rel, texture, archive):
@@ -331,8 +331,8 @@ def _texture_bog(rel, texture, archive):
 
 def build_mod_zip(project, game, out):
     project, out = Path(project), Path(out)
-    game_files = Archive(game)
-    files = _file_changes(project, game_files)
+    stock = game_files(game)
+    files = _file_changes(project, stock)
     textures = _texture_changes(project)
     lists = [name for name in (STRINGS, CARS, TEAMS) if (project / name).is_file()]
     if not files and not textures and not lists:
@@ -343,7 +343,7 @@ def build_mod_zip(project, game, out):
     try:
         parse_mod_json(manifest)
         for rel, texture in textures.items():
-            bog = _texture_bog(rel, texture, game_files)
+            bog = _texture_bog(rel, texture, stock)
             files[rel] = bog
             files.update((alias, bog) for alias in texture.aliases)
         with zipfile.ZipFile(temp, "w", zipfile.ZIP_DEFLATED) as archive:

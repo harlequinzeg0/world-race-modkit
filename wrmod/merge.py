@@ -3,15 +3,19 @@
 Python does all merging, and the DLL only reads the result. Lists the game reads from XML are
 generated into the session folder as text edits of the stock files, so their layout stays.
 """
+import io
 import json
 import re
 import shutil
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
-from .bark import Archive
+from PIL import Image, ImageOps
+
+from .gamefiles import game_files
 from .bed import BedError
+from .bog import HEADER_SIZE
 from .gameinfo import STOCK_EXE
 from .icons import (
     HIGHLIGHT_SHEET,
@@ -24,6 +28,7 @@ from .icons import (
     TEAM_NAME_SHEET,
     IconError,
     add_icons,
+    bog_image,
     highlight_box,
     highlight_path,
     icon_path,
@@ -55,6 +60,9 @@ MAX_WIDTH = 16
 MAX_TEAMS = 16
 
 BLOKE_HEAD = re.compile(r'(<BlokeHead>.*?Texture=")[^"]*"', re.S)
+MOVIE_FIRST_FRAME = re.compile(r'(<MovieFirstFrame>.*?Texture=")([^"]*)"', re.S)
+# Where NitroXFueled's car renders park the car, as shares of the picture: left, top, width, height.
+GARAGE_CAR_BOX = (0.54, 0.50, 0.40, 0.36)
 TEXT_PREFIX = "WRSE_CAR_"
 DRIVER_TEXT_PREFIX = "WRSE_DRIVER_"
 CAR_ELEMENT = re.compile(r"<CAR [^>]*/>")
@@ -66,12 +74,12 @@ class MergeError(Exception):
 
 
 class _Source:
-    """Reads a game file from the winning mod, or else from the archive."""
+    """Reads a game file from the winning mod, or else from the game."""
 
     def __init__(self, game, folders):
         self._game = game
         self._folders = folders
-        self._archive = None
+        self._game_files = None
 
     def _mod_path(self, rel):
         for folder in reversed(self._folders):
@@ -81,9 +89,9 @@ class _Source:
         return None
 
     def _stock(self):
-        if self._archive is None:
-            self._archive = Archive(self._game)
-        return self._archive
+        if self._game_files is None:
+            self._game_files = game_files(self._game)
+        return self._game_files
 
     def stock_paths(self):
         return self._stock().paths()
@@ -123,6 +131,20 @@ def _driver_text_name(car):
 
 def _portrait(car):
     return f"player_textures/cache/player_{car['internal_name']}"
+
+
+def _still(name):
+    """The car's still picture on the stock car select screen."""
+    return f"frontend/{name}_movie"
+
+
+def _clip(name):
+    """A car's clip as the screens name it. The game adds `n` and `.bik` to open it."""
+    return f"movies/cars/{name}"
+
+
+def _clip_file(name):
+    return f"n{_clip(name)}.bik"
 
 
 def _new_texts(cars):
@@ -237,10 +259,57 @@ def _edit_car_info(text, elements, cars, leaders, icons):
     return text[:end] + "".join(f"\r\n   {element}" for element in added) + text[end:]
 
 
-def _screen_entry(entry, car, logo, highlights, portraits):
+def _write_garage(source, generated, name, backdrop):
+    try:
+        backdrop_bog = source.read(f"{backdrop}.bog")
+        garage = bog_image(backdrop_bog, backdrop)
+        still = bog_image(source.read(f"{_still(name)}.bog"), f"The still picture of {name}")
+    except KeyError as e:
+        raise MergeError(f"The garage picture {backdrop} is missing") from e
+    except IconError as e:
+        raise MergeError(str(e)) from e
+    left, top, width, height = (round(share * size) for share, size in zip(GARAGE_CAR_BOX, garage.size * 2))
+    still = ImageOps.contain(still, (width, height), Image.Resampling.LANCZOS)
+    garage.paste(still, (left + (width - still.width) // 2, top + (height - still.height) // 2), still)
+    png = io.BytesIO()
+    garage.save(png, format="PNG")
+    path = f"frontend/{name}_garage"
+    target = generated / f"{path}.bog"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(backdrop_bog[:HEADER_SIZE] + png.getvalue())
+    return path
+
+
+def _write_garages(source, cars, rows, teams, stock_names, generated):
+    """Overhauls such as NitroXFueled show a team garage first, then play a render of the car.
+    An added car shows its team's garage, with its still where the renders park the cars, and
+    plays its own clip if its mod has one. Stock shows each car's own still, so it needs none of
+    this. Returns each car's first frame and clip."""
+    by_name = {m.group(1): m.group(0) for m in SCREEN_ENTRY.finditer(source.text(SCREENS[0]))}
+    base_teams = {team["id"]: team["base_team"] for team in teams}
+    garages, clips = {}, {}
+    for _, car in cars:
+        name = car["internal_name"]
+        first_frame = MOVIE_FIRST_FRAME.search(by_name[car["based_on"]])
+        if not first_frame or first_frame.group(2) == _still(car["based_on"]):
+            continue
+        team = base_teams.get(car["team"], car["team"])
+        team_frame = MOVIE_FIRST_FRAME.search(by_name[stock_names[rows[team][0]]])
+        if not team_frame:
+            continue
+        has_still = source.in_mod(f"{_still(name)}.bog")
+        garages[name] = _write_garage(source, generated, name, team_frame.group(2)) if has_still else team_frame.group(2)
+        if source.in_mod(_clip_file(name)):
+            clips[name] = _clip(name)
+    return garages, clips
+
+
+def _screen_entry(entry, car, logo, highlights, portraits, garage=None, clip=None):
     based_on = car["based_on"]
     name = car["internal_name"]
-    entry = entry.replace(f'ID="{based_on}"', f'ID="{name}"', 1).replace(f"frontend/{based_on}_movie", f"frontend/{name}_movie")
+    entry = entry.replace(f'ID="{based_on}"', f'ID="{name}"', 1).replace(_still(based_on), _still(name))
+    if garage:
+        entry = MOVIE_FIRST_FRAME.sub(rf'\g<1>{garage}"', entry)
     entry = _set_attribute(entry, "CarName", _text_name(car))
     if "driver" in car:
         entry = _set_attribute(entry, "CharacterName", _driver_text_name(car))
@@ -249,32 +318,39 @@ def _screen_entry(entry, car, logo, highlights, portraits):
     if name in portraits:
         # The screen names a head of its own. It is the same size and picture as the car's portrait.
         entry = BLOKE_HEAD.sub(rf'\g<1>{_portrait(car)}"', entry)
-    if "MovieFirstFrame" in entry:
+    if clip:
+        entry = _set_attribute(entry, "Movie", clip)
+    elif "MovieFirstFrame" in entry:
         # The base car's clip shows the wrong car. With no name the clip never opens, and the
         # car's still picture stays. A missing file is worse: the last clip stays on screen.
         entry = _set_attribute(entry, "Movie", "")
     return _set_attribute(entry, "TeamLogo", logo)
 
 
-def _team_logos(chunk, rows, teams, own_logos):
+def _team_logos(by_name, stock_names, rows, teams, own_logos):
+    # By name, because an overhaul can order car_info.xml differently from the screens.
     logos = {}
     for team, slots in rows.items():
         if team in STOCK_TEAMS:
-            logos[team] = _attribute(chunk[slots[0]].group(0), "TeamLogo")
+            logos[team] = _attribute(by_name[stock_names[slots[0]]], "TeamLogo")
     for team in teams:
         logos[team["id"]] = team["id"] if team["id"] in own_logos else logos[team["base_team"]]
     return logos
 
 
-def _edit_screen(text, cars, rows, teams, rel, art):
+def _edit_screen(text, cars, rows, teams, rel, art, stock_names):
     entries = list(SCREEN_ENTRY.finditer(text))
     if not entries or len(entries) % STOCK_CARS:
         raise MergeError(f"{rel} has {len(entries)} car entries, which is not a multiple of {STOCK_CARS}")
     for start in reversed(range(0, len(entries), STOCK_CARS)):
         chunk = entries[start:start + STOCK_CARS]
-        logos = _team_logos(chunk, rows, teams, art.logos)
         by_name = {m.group(1): m.group(0) for m in chunk}
-        added = "".join(_screen_entry(by_name[car["based_on"]], car, logos[car["team"]], art.highlights, art.portraits) for _, car in cars)
+        logos = _team_logos(by_name, stock_names, rows, teams, art.logos)
+        added = "".join(
+            _screen_entry(by_name[car["based_on"]], car, logos[car["team"]], art.highlights, art.portraits,
+                          art.garages.get(car["internal_name"]), art.clips.get(car["internal_name"]))
+            for _, car in cars
+        )
         text = text[:chunk[-1].end()] + added + text[chunk[-1].end():]
     width = _grid_width(rows)
     text = text.replace(f'MaxCarIcons="{STOCK_CARS}"', f'MaxCarIcons="{len(rows) * width}"')
@@ -357,6 +433,9 @@ class _Art:
     highlights: set
     portraits: set
     logos: set
+    # On an overhaul, car name to its first frame, and to its own clip if its mod has one.
+    garages: dict = field(default_factory=dict)
+    clips: dict = field(default_factory=dict)
 
 
 def _write_art(source, cars, teams, generated):
@@ -391,15 +470,17 @@ def _write_lists(source, cars, teams, generated):
     if len(elements) != STOCK_CARS:
         raise MergeError(f"{CAR_INFO} has {len(elements)} cars, and the tool needs the stock {STOCK_CARS}")
     stock = [(_attribute(e, "internal_name"), _attribute(e, "team_name")) for e in elements]
+    stock_names = [name for name, _ in stock]
     team_ids = _check_teams(teams, source)
-    _check_cars(cars, [name for name, _ in stock])
+    _check_cars(cars, stock_names)
     rows = _make_rows(stock, cars, team_ids)
     _check_team_cars(teams, cars, rows)
     leaders = {team["leader"] for team in teams}
     art = _write_art(source, cars, teams, generated)
+    art.garages, art.clips = _write_garages(source, cars, rows, teams, stock_names, generated)
     _write_generated(generated, CAR_INFO, _edit_car_info(text, elements, cars, leaders, art.icons))
     for rel in SCREENS:
-        _write_generated(generated, rel, _edit_screen(source.text(rel), cars, rows, teams, rel, art))
+        _write_generated(generated, rel, _edit_screen(source.text(rel), cars, rows, teams, rel, art, stock_names))
     _write_team_effects(source, teams, generated)
     _write_rim_models(source, cars, generated)
     return _session_tables(cars, teams, rows, art.logos)
