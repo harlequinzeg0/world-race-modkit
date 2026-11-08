@@ -71,6 +71,8 @@ DRIVER_TEXT_PREFIX = "WRSE_DRIVER_"
 CAR_ELEMENT = re.compile(r"<CAR [^>]*/>")
 SCREEN_ENTRY = re.compile(r'[ \t]*<car_rep ID="(\w+)".*?</car_rep>\r?\n', re.S)
 CAR_PARAMS = re.compile(r"cars/([^/]+)/cache/\1\.params", re.I)
+# Shared settings for every car, not one car's physics, so a mod's version is used as it is.
+NOT_REBASED = {"generic"}
 
 
 class MergeError(Exception):
@@ -538,7 +540,7 @@ def _write_physics(source, folders, cars, generated):
             continue
         base = based_on.get(car, car)
         base_rel = f"cars/{base}/cache/{base}.params"
-        if base not in stock or not source.game_has(base_rel):
+        if base in NOT_REBASED or base not in stock or not source.game_has(base_rel):
             continue
         try:
             text = rebase(source.text(rel), stock[base], source.game_read(base_rel).decode(ENCODING))

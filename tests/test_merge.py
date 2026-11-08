@@ -860,3 +860,10 @@ def test_params_path_case_does_not_matter(overhaul_game, tmp_path):
     mod = {**params_mod("neon", TUNED, path="cars/Neon/cache/neon.params"), "files": ()}
     build(overhaul_game, [mod], tmp_path)
     assert has_generated(tmp_path, "cars/Neon/cache/neon.params")
+
+
+def test_generic_params_is_never_rebased(overhaul_game, tmp_path, monkeypatch):
+    monkeypatch.setitem(FILES, "cars/generic/cache/generic.params", OVERHAUL_PARAMS.encode("latin1"))
+    monkeypatch.setattr(merge, "stock_physics", lambda: {"generic": read_physics(STOCK_PARAMS)})
+    build(overhaul_game, [{"blobs": {"cars/generic/cache/generic.params": TUNED.encode("latin1")}}], tmp_path)
+    assert not has_generated(tmp_path, "cars/generic/cache/generic.params")
