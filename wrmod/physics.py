@@ -5,7 +5,11 @@ stock game carries stock physics, so on an overhaul its car is much slower than 
 rebase moves the mod's physics onto the overhaul's base car and keeps the mod's own changes as
 shares of the stock values. Wheels stay as the mod has them, because they fit the mod's body.
 """
+import functools
+import json
 import re
+import sys
+from pathlib import Path
 
 COUNTS = {
     "NENGINEBINS": "ENGINETORQUECURVE",
@@ -16,10 +20,13 @@ COUNTS = {
 LIST_KEYS = tuple(COUNTS.values())
 GEAR_ROW = 3
 SAME_VALUE = 1e-6
+# The overhaul folder has no stock .params, so the stock numbers ship with the tool.
+STOCK_TABLE = Path(__file__).with_name("stock_physics.json")
 
 _WHEELS = re.compile(r"^[ \t]*(?:NWHEELS|WHEEL)\b", re.M)
 _KEY = re.compile(r"[A-Z][A-Z0-9_]*")
 _NUMBER = re.compile(r"-?\d*\.?\d+")
+_CAR_PARAMS = re.compile(r"cars/([^/]+)/cache/\1\.params", re.I)
 
 
 class PhysicsError(Exception):
@@ -102,3 +109,35 @@ def rebase(mod_text, stock, overhaul_text):
         else:
             del result[count]
     return write_physics(result) + split_params(mod_text)[1]
+
+
+def make_stock_table(files):
+    table = {}
+    for path in files.paths():
+        match = _CAR_PARAMS.fullmatch(path)
+        if match:
+            table[match.group(1).lower()] = read_physics(files.read(path).decode("latin1"))
+    return dict(sorted(table.items()))
+
+
+@functools.cache
+def stock_physics():
+    return json.loads(STOCK_TABLE.read_text(encoding="utf-8"))
+
+
+def main(argv):
+    from .gamefiles import ARCHIVE_INDEX, game_files
+
+    if len(argv) != 1:
+        sys.exit("Usage: python -m wrmod.physics <stock game folder>")
+    game = Path(argv[0])
+    # An overhaul's loose files are not stock, so only the stock archive gives the right numbers.
+    if not (game / ARCHIVE_INDEX).is_file():
+        sys.exit(f"{game} has no {ARCHIVE_INDEX}. Use the stock game.")
+    table = make_stock_table(game_files(game))
+    STOCK_TABLE.write_text(json.dumps(table, indent=1) + "\n", encoding="utf-8")
+    print(f"Wrote {len(table)} cars to {STOCK_TABLE}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

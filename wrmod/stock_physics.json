@@ -1,0 +1,4814 @@
+{
+ "24_7": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.03
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.4,
+   5500.0,
+   3700.0,
+   0.863,
+   6000.0,
+   3150.0,
+   0.863,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   54.5,
+   54.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.685
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "40_somethin": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.18
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.9,
+   6000.0,
+   3150.0,
+   0.9,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   46.5,
+   46.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.97
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.97
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUP": [
+   1.83
+  ],
+  "INAIRGRAVSCALEDOWN": [
+   1.85
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.78
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.78
+  ]
+ },
+ "aeroflash": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.18
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.9,
+   6000.0,
+   3150.0,
+   0.9,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   58.5,
+   58.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.69
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.69
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUP": [
+   1.83
+  ],
+  "INAIRGRAVSCALEDOWN": [
+   1.83
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.73
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.73
+  ],
+  "INAIRGRAVSCALEUPPALSCALE": [
+   0.95
+  ],
+  "INAIRGRAVSCALEDOWNPALSCALE": [
+   0.95
+  ],
+  "INAIRGRAVSCALEUPSHORTPALSCALE": [
+   0.95
+  ],
+  "INAIRGRAVSCALEDOWNSHORTPALSCALE": [
+   0.95
+  ]
+ },
+ "back_draft": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.95
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.84,
+   6000.0,
+   3150.0,
+   0.84,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   48.5,
+   48.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.715
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "ballistic": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.18
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.9,
+   6000.0,
+   3150.0,
+   0.9,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   54.0,
+   54.0
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.585
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "deora2": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.1
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.4,
+   5500.0,
+   3700.0,
+   0.88,
+   6000.0,
+   3150.0,
+   0.88,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   52.5,
+   52.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUP": [
+   1.8
+  ],
+  "INAIRGRAVSCALEDOWN": [
+   1.86
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.68
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "generic": {
+  "MASS": [
+   1.2
+  ],
+  "FRICTION": [
+   1.0
+  ],
+  "HARDNESS": [
+   1.0
+  ],
+  "RESISTANCE": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "ANGRESISTANCE": [
+   0.1,
+   0.1,
+   0.1
+  ],
+  "AIRRESISTANCE": [
+   1.0
+  ],
+  "ANGMOMMAX": [
+   30.0
+  ],
+  "LENGTH": [
+   3.0
+  ],
+  "HEIGHT": [
+   1.5
+  ],
+  "WIDTH": [
+   2.0
+  ],
+  "WHEELBASE": [
+   1.0
+  ],
+  "FORCEPOINT": [
+   -0.15
+  ],
+  "FORCEPOINTBOOSTSCALE": [
+   -0.1
+  ],
+  "INAIRGRAVSCALEUP": [
+   1.83
+  ],
+  "INAIRGRAVSCALEDOWN": [
+   1.85
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.78
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.8
+  ],
+  "INAIRGRAVSCALEUPPALSCALE": [
+   0.97
+  ],
+  "INAIRGRAVSCALEDOWNPALSCALE": [
+   0.97
+  ],
+  "INAIRGRAVSCALEUPSHORTPALSCALE": [
+   0.97
+  ],
+  "INAIRGRAVSCALEDOWNSHORTPALSCALE": [
+   0.97
+  ],
+  "AIRALIGNSCALE": [
+   0.0
+  ],
+  "AIRALIGNTORQUEMAX": [
+   10.0
+  ],
+  "AIRALIGNOFFSET": [
+   0.0,
+   0.0,
+   1.0
+  ],
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.1
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NBRAKEBINS": [
+   5.0
+  ],
+  "BRAKECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "BRAKEFORCEMAX": [
+   50.0
+  ],
+  "HANDBRAKEFORCEMAX": [
+   0.001
+  ],
+  "BRAKEVELMAX": [
+   100.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.0,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.92,
+   6000.0,
+   3150.0,
+   0.92,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   55.0,
+   55.0
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "STEERDRAGSCALE": [
+   0.1
+  ],
+  "MAXSTEERANGLE": [
+   30.0
+  ],
+  "NANGDAMPINGBINS": [
+   10.0
+  ],
+  "ANGDAMPINGCURVE": [
+   1.0,
+   0.9,
+   0.81,
+   0.73,
+   0.66,
+   0.6,
+   0.55,
+   0.51,
+   0.48,
+   0.46
+  ],
+  "ANGDAMPINGMAX": [
+   20.0,
+   20.0
+  ],
+  "ANGDAMPINGVELMAX": [
+   100.0
+  ],
+  "NSIDEFORCEBINS": [
+   10.0
+  ],
+  "SIDEFORCECURVE": [
+   0.7,
+   0.7,
+   0.7,
+   0.75,
+   0.8,
+   0.85,
+   0.9,
+   0.95,
+   1.0,
+   1.0
+  ],
+  "SIDEFORCEMAX": [
+   150.0,
+   150.0
+  ],
+  "SIDEFORCEVELMAX": [
+   200.0
+  ],
+  "CORNERINGFORCEBRAKESCALE": [
+   -0.2,
+   -0.2
+  ],
+  "CORNERINGFORCEHANDBRAKESCALE": [
+   0.3,
+   0.3
+  ],
+  "NSLIDESCALEBINS": [
+   10.0
+  ],
+  "SLIDESCALECURVE": [
+   0.0,
+   1.0,
+   0.8,
+   0.8,
+   0.8,
+   0.8,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "SLIDESCALEVELMAX": [
+   200.0
+  ],
+  "TORQUESLIDESCALE": [
+   0.85,
+   0.85
+  ],
+  "SIDEFORCESLIDESCALE": [
+   0.9,
+   0.9
+  ],
+  "DRIVEFORCESLIDESCALE": [
+   0.75,
+   0.75
+  ],
+  "DRIVEFORCESPINSCALE": [
+   0.75,
+   0.75
+  ],
+  "BRAKEFORCESLIDESCALE": [
+   0.01,
+   0.01
+  ],
+  "SLIDEMAXVEL": [
+   200.0
+  ],
+  "POWERSLIDEMAXVEL": [
+   200.0
+  ],
+  "NPOWERSLIDEACCSCALEBINS": [
+   10.0
+  ],
+  "POWERSLIDEACCSCALECURVE": [
+   0.01,
+   0.2,
+   0.3,
+   0.4,
+   0.5,
+   0.6,
+   0.7,
+   0.8,
+   0.9,
+   1.0
+  ],
+  "POWERSLIDEACCSCALEVELMAX": [
+   100.0
+  ],
+  "POWERSLIDEACCSCALEMAX": [
+   2.0
+  ],
+  "SLIDEHANDBRAKERATE": [
+   10.0,
+   10.0
+  ],
+  "SLIDEHANDBRAKERETURNRATE": [
+   1.5,
+   1.5
+  ],
+  "SLIDEBRAKERATE": [
+   3.0,
+   3.0
+  ],
+  "SLIDEBRAKERETURNRATE": [
+   1.8,
+   1.8
+  ],
+  "SLIDESTEERRATE": [
+   0.07,
+   0.07
+  ],
+  "SLIDESTEERRETURNRATE": [
+   2.0,
+   2.0
+  ],
+  "MAXBUMPVEL": [
+   10.0
+  ],
+  "NSTEERRATEBINS": [
+   10.0
+  ],
+  "STEERRATECURVE": [
+   1.3,
+   1.0,
+   1.0,
+   1.0,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9,
+   0.9
+  ],
+  "STEERRATEVELMAX": [
+   200.0
+  ],
+  "STEERRATE": [
+   9.0,
+   9.0
+  ],
+  "STEERRETURNRATE": [
+   10.0,
+   10.0
+  ],
+  "ACCRATE": [
+   5.0
+  ],
+  "ACCRETURNRATE": [
+   7.0
+  ],
+  "BRAKERATE": [
+   2.0
+  ],
+  "BRAKERETURNRATE": [
+   4.0
+  ],
+  "SLIDERATE": [
+   2.0
+  ],
+  "SLIDERETURNRATE": [
+   3.0
+  ],
+  "PREWINDRATE": [
+   2.0
+  ],
+  "PREWINDRATERETURN": [
+   10.0
+  ],
+  "BOOSTTIME": [
+   0.6
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.75
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   147.0
+  ],
+  "BOOSTBYPLAYERMUL": [
+   1.0
+  ],
+  "BOOSTREORIENTTIME": [
+   0.2
+  ],
+  "BOOSTJUMPTRIGGERWINDOW": [
+   0.25
+  ],
+  "BOOSTJUMPTIME": [
+   0.347
+  ],
+  "BOOSTJUMPSPEED": [
+   183.5
+  ],
+  "BOOSTJUMPAIRCHAVTIME": [
+   0.04
+  ],
+  "BOOSTBRAKESLOWDOWNSCALE": [
+   0.0
+  ],
+  "BOOSTBRAKETIME": [
+   0.0
+  ],
+  "BOOSTBRAKEMINSPEED": [
+   180.0
+  ],
+  "STUNTROLLIMPULSE": [
+   780.0
+  ],
+  "STUNTFLIPIMPULSE": [
+   890.0
+  ],
+  "STUNTFLIPBACKIMPULSE": [
+   790.0
+  ],
+  "INAIRSTEERLEANTORQUE": [
+   8.5
+  ],
+  "INAIRLEANSCALE": [
+   10.0
+  ],
+  "INAIRROLLGAIN": [
+   2.0
+  ],
+  "INAIRFLIPGAIN": [
+   3.0
+  ],
+  "STUNTLANDINGTIME": [
+   1.0
+  ],
+  "STUNTGOODLOOKANGLE": [
+   55.0
+  ],
+  "STUNTGOODUPANGLE": [
+   60.0
+  ],
+  "STUNTTRIGGERWINDOW": [
+   1.5
+  ],
+  "REWARDTIME": [
+   25.0
+  ],
+  "REWARDMAXSPEEDRANGE": [
+   5.0
+  ],
+  "REWARDMAXSPEED": [
+   140.0
+  ],
+  "REWARDTORQUESCALE": [
+   1.8
+  ],
+  "REWARDSIDEFORCESCALE": [
+   1.05
+  ],
+  "REWARDCORNERINGFORCESCALE": [
+   1.25
+  ],
+  "ROLLMAXTORQUE": [
+   30.0
+  ],
+  "ROLLPGAIN": [
+   0.125
+  ],
+  "ROLLIGAIN": [
+   0.0075
+  ],
+  "ROLLDGAIN": [
+   0.025
+  ],
+  "FLIPPGAIN": [
+   5.0
+  ],
+  "FLIPIGAIN": [
+   2.5
+  ],
+  "FLIPDGAIN": [
+   1.0
+  ],
+  "FLIPSREQUIRED": [
+   4.0
+  ],
+  "PERFECTFLIPEQUIVALENT": [
+   2.0
+  ],
+  "PERFECTANGLE": [
+   35.0
+  ],
+  "STALEMUL": [
+   0.5
+  ],
+  "LOSSRATE": [
+   1.0
+  ],
+  "LOSS": [
+   1.0
+  ],
+  "PICKUPADD": [
+   0.05
+  ],
+  "ONECOMBOMUL": [
+   1.35
+  ],
+  "TWOCOMBOMUL": [
+   1.84
+  ],
+  "THREECOMBOMUL": [
+   2.5
+  ],
+  "ONGROUNDGRAVITYCHAVSCALEFREE": [
+   1.0
+  ],
+  "ONGROUNDGRAVITYCHAVSCALECOLLIDE": [
+   4.0
+  ],
+  "ONGROUNDGRAVITYCHAVSCALERATEFREETOCOLLIDE": [
+   100.0
+  ],
+  "ONGROUNDGRAVITYCHAVSCALERATECOLLIDETOFREE": [
+   3.0
+  ]
+ },
+ "golden_arrow": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.88
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.82,
+   6000.0,
+   3150.0,
+   0.82,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   54.5,
+   54.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.715
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "greased_lightning": {
+  "ANGRESISTANCE": [
+   0.1,
+   0.05,
+   0.1
+  ],
+  "LENGTH": [
+   4.5
+  ],
+  "HEIGHT": [
+   2.25
+  ],
+  "WIDTH": [
+   3.0
+  ],
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.8
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.79,
+   6000.0,
+   3150.0,
+   0.79,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   85.0,
+   85.0
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "MAXSTEERANGLE": [
+   26.0
+  ],
+  "NSIDEFORCEBINS": [
+   10.0
+  ],
+  "SIDEFORCECURVE": [
+   0.7,
+   0.7,
+   0.7,
+   0.75,
+   0.8,
+   0.85,
+   0.9,
+   0.95,
+   1.0,
+   1.0
+  ],
+  "SIDEFORCEMAX": [
+   120.0,
+   120.0
+  ],
+  "SIDEFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "STUNTROLLIMPULSE": [
+   1520.0
+  ],
+  "STUNTFLIPIMPULSE": [
+   1900.0
+  ],
+  "STUNTFLIPBACKIMPULSE": [
+   1780.0
+  ],
+  "INAIRSTEERLEANTORQUE": [
+   8.5
+  ],
+  "INAIRLEANSCALE": [
+   10.0
+  ],
+  "INAIRROLLGAIN": [
+   4.0
+  ],
+  "INAIRFLIPGAIN": [
+   6.0
+  ]
+ },
+ "jester": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.1
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.88,
+   6000.0,
+   3150.0,
+   0.88,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   54.5,
+   54.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.78
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.8
+  ]
+ },
+ "krazy_8s": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.25
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.9205,
+   6000.0,
+   3150.0,
+   0.9205,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   56.5,
+   56.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.74
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "maelstrom": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.1
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.88,
+   6000.0,
+   3150.0,
+   0.88,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   48.5,
+   48.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.665
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "mega_duty": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.8
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.79,
+   6000.0,
+   3150.0,
+   0.79,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   48.5,
+   48.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.74
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.76
+  ]
+ },
+ "mst_suzuka": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.03
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.863,
+   6000.0,
+   3150.0,
+   0.863,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   58.5,
+   58.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.69
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.69
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.71
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "muscle_tone": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.95
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.84,
+   6000.0,
+   3150.0,
+   0.84,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   52.5,
+   52.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUP": [
+   1.83
+  ],
+  "INAIRGRAVSCALEDOWN": [
+   1.83
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.61
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "nomadder_what": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.18
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.9,
+   6000.0,
+   3150.0,
+   0.9,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   48.5,
+   48.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUP": [
+   1.82
+  ],
+  "INAIRGRAVSCALEDOWN": [
+   1.83
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.605
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "overbored": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.1
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.88,
+   6000.0,
+   3150.0,
+   0.88,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   58.5,
+   58.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.69
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.69
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.665
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "pony_up": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.1
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.88,
+   6000.0,
+   3150.0,
+   0.88,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   50.5,
+   50.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.73
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "power_pipes": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.8
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.79,
+   6000.0,
+   3150.0,
+   0.79,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   54.5,
+   54.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.73
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.76
+  ]
+ },
+ "power_pistons": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.95
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.84,
+   6000.0,
+   3150.0,
+   0.84,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   56.5,
+   56.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.725
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.755
+  ]
+ },
+ "power_rocket": {
+  "ANGRESISTANCE": [
+   0.1,
+   0.05,
+   0.1
+  ],
+  "LENGTH": [
+   4.5
+  ],
+  "HEIGHT": [
+   2.25
+  ],
+  "WIDTH": [
+   3.0
+  ],
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.88
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.82,
+   6000.0,
+   3150.0,
+   0.82,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   95.0,
+   95.0
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "MAXSTEERANGLE": [
+   23.0
+  ],
+  "NSIDEFORCEBINS": [
+   10.0
+  ],
+  "SIDEFORCECURVE": [
+   0.7,
+   0.7,
+   0.7,
+   0.75,
+   0.8,
+   0.85,
+   0.9,
+   0.95,
+   1.0,
+   1.0
+  ],
+  "SIDEFORCEMAX": [
+   132.0,
+   132.0
+  ],
+  "SIDEFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "STUNTROLLIMPULSE": [
+   1520.0
+  ],
+  "STUNTFLIPIMPULSE": [
+   1900.0
+  ],
+  "STUNTFLIPBACKIMPULSE": [
+   1780.0
+  ],
+  "INAIRSTEERLEANTORQUE": [
+   8.5
+  ],
+  "INAIRLEANSCALE": [
+   10.0
+  ],
+  "INAIRROLLGAIN": [
+   4.0
+  ],
+  "INAIRFLIPGAIN": [
+   6.0
+  ]
+ },
+ "prototype_12": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.03
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.863,
+   6000.0,
+   3150.0,
+   0.863,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   48.5,
+   48.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.93
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ]
+ },
+ "quater_mile_coupe": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.25
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.4,
+   5500.0,
+   3700.0,
+   0.9205,
+   6000.0,
+   3150.0,
+   0.9205,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   50.5,
+   50.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.65
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "road_rocket": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.8
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.79,
+   6000.0,
+   3150.0,
+   0.79,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   56.5,
+   56.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.69
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "rodger_dodger": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.88
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.82,
+   6000.0,
+   3150.0,
+   0.82,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   56.5,
+   56.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.795
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.8
+  ]
+ },
+ "seared_tuner": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.88
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.4,
+   5500.0,
+   3700.0,
+   0.82,
+   6000.0,
+   3150.0,
+   0.82,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   52.5,
+   52.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.69
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "side_draft": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.95
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.84,
+   6000.0,
+   3150.0,
+   0.84,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   54.5,
+   54.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.81
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.75
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "silhouette_2": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.03
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.863,
+   6000.0,
+   3150.0,
+   0.863,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   50.5,
+   50.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.69
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "sling_shot": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.18
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.9,
+   6000.0,
+   3150.0,
+   0.9,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   56.5,
+   56.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.7
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "smashmouth": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.95
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.84,
+   6000.0,
+   3150.0,
+   0.84,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   46.5,
+   46.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.97
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.97
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.83
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.83
+  ]
+ },
+ "soo_fast": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.8
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.79,
+   6000.0,
+   3150.0,
+   0.79,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   52.5,
+   52.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.75
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.77
+  ]
+ },
+ "super_tuned": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.95
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.84,
+   6000.0,
+   3150.0,
+   0.84,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   46.5,
+   46.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.97
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.97
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.83
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.83
+  ]
+ },
+ "sweet_sixteen2": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.18
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.9,
+   6000.0,
+   3150.0,
+   0.9,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   52.5,
+   52.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.85
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.73
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "switchback": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   0.88
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.82,
+   6000.0,
+   3150.0,
+   0.82,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   46.5,
+   46.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.97
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.97
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.775
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.795
+  ]
+ },
+ "twin_mill": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.18
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.9,
+   6000.0,
+   3150.0,
+   0.9,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   50.5,
+   50.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.89
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.7
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.76
+  ]
+ },
+ "vulture": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.1
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.88,
+   6000.0,
+   3150.0,
+   0.88,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   56.5,
+   56.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUP": [
+   1.8
+  ],
+  "INAIRGRAVSCALEDOWN": [
+   1.86
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.65
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ],
+  "INAIRGRAVSCALEUPPALSCALE": [
+   0.95
+  ],
+  "INAIRGRAVSCALEDOWNPALSCALE": [
+   0.95
+  ],
+  "INAIRGRAVSCALEUPSHORTPALSCALE": [
+   0.95
+  ],
+  "INAIRGRAVSCALEDOWNSHORTPALSCALE": [
+   0.95
+  ]
+ },
+ "zed_36": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.18
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.5,
+   5500.0,
+   3700.0,
+   0.9,
+   6000.0,
+   3150.0,
+   0.9,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   56.5,
+   56.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.7
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.75
+  ]
+ },
+ "zotic": {
+  "NENGINEBINS": [
+   10.0
+  ],
+  "ENGINETORQUECURVE": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ENGINETORQUEMAX": [
+   1.03
+  ],
+  "ENGINEMINREVS": [
+   700.0
+  ],
+  "ENGINEMAXREVS": [
+   6000.0
+  ],
+  "ENGINEFRICTION": [
+   3.0
+  ],
+  "ENGINEREVRATENORMAL": [
+   10.0
+  ],
+  "NGEARS": [
+   7.0
+  ],
+  "GEARRATIOS": [
+   -4.0,
+   0.0,
+   0.0,
+   4.0,
+   5500.0,
+   0.0,
+   2.4,
+   5500.0,
+   3350.0,
+   2.0,
+   5500.0,
+   3150.0,
+   1.45,
+   5500.0,
+   3700.0,
+   0.863,
+   6000.0,
+   3150.0,
+   0.863,
+   6000.0,
+   3150.0
+  ],
+  "GEARCHANGETIME": [
+   0.1
+  ],
+  "GEARMULTIPLIER": [
+   11.0
+  ],
+  "NCORNERINGFORCEBINS": [
+   20.0
+  ],
+  "CORNERINGFORCECURVE": [
+   0.0,
+   0.8,
+   0.75,
+   0.6,
+   0.53,
+   0.53,
+   0.5,
+   0.46,
+   0.42,
+   0.39,
+   0.37,
+   0.35,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33,
+   0.33
+  ],
+  "CORNERINGFORCEMAX": [
+   56.5,
+   56.5
+  ],
+  "CORNERINGFORCEVELMAX": [
+   200.0
+  ],
+  "BOOSTTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERTIME": [
+   0.77
+  ],
+  "BOOSTBYPLAYERSPEED": [
+   150.0
+  ],
+  "INAIRGRAVSCALEUPSHORT": [
+   1.72
+  ],
+  "INAIRGRAVSCALEDOWNSHORT": [
+   1.76
+  ]
+ }
+}

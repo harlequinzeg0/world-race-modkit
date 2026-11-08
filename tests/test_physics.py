@@ -1,6 +1,6 @@
 import pytest
 
-from wrmod.physics import PhysicsError, read_physics, rebase, split_params, write_physics
+from wrmod.physics import PhysicsError, make_stock_table, read_physics, rebase, split_params, stock_physics, write_physics
 
 STOCK = (
     "// Params for base\r\nNENGINEBINS\t2\r\nENGINETORQUECURVE\r\n\t1.0\r\n\t1.0\r\n"
@@ -100,3 +100,34 @@ def test_overhaul_only_keys_are_added():
     out = rebased(STOCK)
     assert out["MAXSTEERANGLE"] == [26]
     assert out["SIDEFORCEMAX"] == [130, 130]
+
+
+class FakeFiles:
+    def __init__(self, files):
+        self._files = files
+
+    def paths(self):
+        return list(self._files)
+
+    def read(self, path):
+        return self._files[path]
+
+
+def test_make_stock_table_reads_each_car_params():
+    files = FakeFiles({
+        "cars/base/cache/base.params": STOCK.encode("latin1"),
+        "cars/base/cache/base_med.rom": b"x",
+        "cars/other/cache/not_other.params": STOCK.encode("latin1"),
+    })
+    table = make_stock_table(files)
+    assert list(table) == ["base"]
+    assert table["base"] == S
+
+
+def test_shipped_table_has_every_stock_car():
+    table = stock_physics()
+    assert {"ballistic", "sweet_sixteen2", "smashmouth", "zed_36", "zotic", "24_7"} <= set(table)
+    assert len([car for car in table if not car.startswith("generic")]) == 37
+    assert table["ballistic"]["ENGINETORQUEMAX"] == [1.18]
+    assert table["sweet_sixteen2"]["ENGINETORQUEMAX"] == [1.18]
+    assert table["ballistic"]["ENGINEFRICTION"] == [3.0]
