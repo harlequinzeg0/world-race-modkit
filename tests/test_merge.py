@@ -13,6 +13,9 @@ from wrmod.bog import HEADER_SIZE, dds_to_bog, parse_header
 from wrmod.gameinfo import RETAIL_SHA256, STOCK_EXE
 from wrmod.icons import HIGHLIGHT_SHEET, ICON_SHEET, TEAM_LOGO_SHEET, TEAM_NAME_SHEET, dxt5_dds
 from wrmod.merge import MergeError, build_session
+from wrmod.modpack import OVERHAUL_TAG
+from wrmod.physics import read_physics
+from test_physics import OVERHAUL as OVERHAUL_PARAMS, STOCK as STOCK_PARAMS
 from wrmod.msg import LANGUAGES, STRING_COUNT, msg_path, read_msg, write_msg
 from wrmod.rom import Material, Rom, read_rom, write_rom
 
@@ -74,6 +77,7 @@ FILES = {
     "frontend/car_select_screen.xml": screen(1),
     "frontend/multi_player_car_select.xml": screen(2),
     "misc/cache/flash.bed": b"\x01\x01flash.tga\0\0\0flash_1\0flash_2\0",
+    "cars/ballistic/cache/ballistic.params": OVERHAUL_PARAMS.encode("latin1"),
     **stock_sheets(),
     "cars/effects/cache/stunt.xml": b"<plain/>",
     "cars/effects/cache/stunt_road_beasts.xml": b"<beasts/>",
@@ -104,12 +108,16 @@ def stock(tmp_path, monkeypatch):
     (game / STOCK_EXE).write_bytes(b"exe")
     monkeypatch.setattr(merge, "game_files", FakeArchive)
     monkeypatch.setattr(merge, "load_string_ids", lambda exe: {"X": 0})
+    monkeypatch.setattr(merge, "is_overhaul", lambda game: False)
+    monkeypatch.setattr(merge, "stock_physics", lambda: {"ballistic": read_physics(STOCK_PARAMS)})
     return game
 
 
-def make_mod(mods_dir, mod_id, cars=None, teams=None, files=(), strings=None, blobs=None):
+def make_mod(mods_dir, mod_id, cars=None, teams=None, files=(), strings=None, blobs=None, tagged=False):
     folder = mods_dir / mod_id
     folder.mkdir(parents=True)
+    if tagged:
+        (folder / OVERHAUL_TAG).write_bytes(b"")
     info = {
         "format_version": 1, "id": mod_id, "name": mod_id, "version": "1", "author": "a",
         "description": "d", "kind": "car", "requires_game": RETAIL_SHA256,
@@ -775,3 +783,80 @@ def test_the_stock_rim_colour_needs_no_wheel_model(stock, tmp_path):
 def test_a_car_with_no_rim_colour_makes_no_wheel_model(stock, tmp_path):
     build(stock, [car_mod("neon")], tmp_path)
     assert not (tmp_path / "session/generated/cars/generic_models").exists()
+
+
+TUNED = STOCK_PARAMS.replace("1.18", "0.8")
+BALLISTIC_PARAMS = "cars/ballistic/cache/ballistic.params"
+
+
+@pytest.fixture
+def overhaul_game(stock, monkeypatch):
+    monkeypatch.setattr(merge, "is_overhaul", lambda game: True)
+    return stock
+
+
+def params_mod(name, text, path=None, **changes):
+    mod = car_mod(name, **changes)
+    return {**mod, "blobs": {path or f"cars/{name}/cache/{name}.params": text.encode("latin1")}}
+
+
+def stock_params_mod(text, tagged=False):
+    return {"blobs": {BALLISTIC_PARAMS: text.encode("latin1")}, "tagged": tagged}
+
+
+def torque(tmp_path, rel):
+    return read_physics(generated(tmp_path, rel))["ENGINETORQUEMAX"]
+
+
+def has_generated(tmp_path, rel):
+    return (tmp_path / "session/generated" / rel).exists()
+
+
+def test_on_an_overhaul_an_untagged_added_car_is_rebased(overhaul_game, tmp_path):
+    build(overhaul_game, [params_mod("neon", TUNED)], tmp_path)
+    assert torque(tmp_path, "cars/neon/cache/neon.params") == [pytest.approx(1.5 * 0.8 / 1.18)]
+
+
+def test_on_an_overhaul_a_tagged_mod_is_left_alone(overhaul_game, tmp_path):
+    build(overhaul_game, [{**params_mod("neon", TUNED), "tagged": True}], tmp_path)
+    assert not has_generated(tmp_path, "cars/neon/cache/neon.params")
+
+
+def test_on_an_overhaul_a_stock_car_params_is_rebased(overhaul_game, tmp_path):
+    build(overhaul_game, [stock_params_mod(TUNED)], tmp_path)
+    assert torque(tmp_path, BALLISTIC_PARAMS) == [pytest.approx(1.5 * 0.8 / 1.18)]
+
+
+def test_a_stock_game_never_rebases(stock, tmp_path):
+    build(stock, [params_mod("neon", TUNED), stock_params_mod(TUNED)], tmp_path)
+    assert not has_generated(tmp_path, "cars/neon/cache/neon.params")
+    assert not has_generated(tmp_path, BALLISTIC_PARAMS)
+
+
+def test_rebase_follows_the_winning_mod(overhaul_game, tmp_path):
+    build(overhaul_game, [stock_params_mod(TUNED), stock_params_mod(TUNED, tagged=True)], tmp_path)
+    assert not has_generated(tmp_path, BALLISTIC_PARAMS)
+    build(overhaul_game, [stock_params_mod(TUNED, tagged=True), stock_params_mod(TUNED)], tmp_path / "again")
+    assert has_generated(tmp_path / "again", BALLISTIC_PARAMS)
+
+
+def test_overhaul_values_come_from_the_game_not_a_mod(overhaul_game, tmp_path):
+    replaced = stock_params_mod(OVERHAUL_PARAMS.replace("1.5", "9.0"), tagged=True)
+    build(overhaul_game, [replaced, params_mod("neon", TUNED)], tmp_path)
+    assert torque(tmp_path, "cars/neon/cache/neon.params") == [pytest.approx(1.5 * 0.8 / 1.18)]
+
+
+def test_params_of_an_unknown_car_is_left_alone(overhaul_game, tmp_path):
+    build(overhaul_game, [{"blobs": {"cars/mystery/cache/mystery.params": TUNED.encode("latin1")}}], tmp_path)
+    assert not has_generated(tmp_path, "cars/mystery/cache/mystery.params")
+
+
+def test_unreadable_params_is_left_alone(overhaul_game, tmp_path):
+    build(overhaul_game, [params_mod("neon", "ENGINETORQUEMAX abc\r\n")], tmp_path)
+    assert not has_generated(tmp_path, "cars/neon/cache/neon.params")
+
+
+def test_params_path_case_does_not_matter(overhaul_game, tmp_path):
+    mod = {**params_mod("neon", TUNED, path="cars/Neon/cache/neon.params"), "files": ()}
+    build(overhaul_game, [mod], tmp_path)
+    assert has_generated(tmp_path, "cars/Neon/cache/neon.params")

@@ -13,7 +13,7 @@ from pathlib import Path
 
 from PIL import Image, ImageOps
 
-from .gamefiles import game_files
+from .gamefiles import game_files, is_overhaul
 from .bed import BedError
 from .bog import HEADER_SIZE
 from .gameinfo import STOCK_EXE
@@ -35,7 +35,10 @@ from .icons import (
     logo_path,
     team_name_path,
 )
-from .modpack import CARS, FILES_DIR, MANIFEST, ModError, RIM_COLOURS, TEAMS, mod_cars, mod_files, mod_strings, mod_teams
+from .modpack import (
+    CARS, FILES_DIR, MANIFEST, OVERHAUL_TAG, ModError, RIM_COLOURS, TEAMS, mod_cars, mod_files, mod_strings, mod_teams,
+)
+from .physics import PhysicsError, rebase, stock_physics
 from .msg import LANGUAGES, apply_edits, load_string_ids, msg_path, new_text_ids, resolve_edits
 from .rom import read_rom, write_rom
 
@@ -67,6 +70,7 @@ TEXT_PREFIX = "WRSE_CAR_"
 DRIVER_TEXT_PREFIX = "WRSE_DRIVER_"
 CAR_ELEMENT = re.compile(r"<CAR [^>]*/>")
 SCREEN_ENTRY = re.compile(r'[ \t]*<car_rep ID="(\w+)".*?</car_rep>\r?\n', re.S)
+CAR_PARAMS = re.compile(r"cars/([^/]+)/cache/\1\.params", re.I)
 
 
 class MergeError(Exception):
@@ -81,12 +85,15 @@ class _Source:
         self._folders = folders
         self._game_files = None
 
-    def _mod_path(self, rel):
+    def winner(self, rel):
         for folder in reversed(self._folders):
-            path = folder / FILES_DIR / rel
-            if path.is_file():
-                return path
+            if (folder / FILES_DIR / rel).is_file():
+                return folder
         return None
+
+    def _mod_path(self, rel):
+        folder = self.winner(rel)
+        return folder / FILES_DIR / rel if folder else None
 
     def _stock(self):
         if self._game_files is None:
@@ -95,6 +102,12 @@ class _Source:
 
     def stock_paths(self):
         return self._stock().paths()
+
+    def game_has(self, rel):
+        return self._stock().has(rel)
+
+    def game_read(self, rel):
+        return self._stock().read(rel)
 
     def in_mod(self, rel):
         return self._mod_path(rel) is not None
@@ -510,6 +523,33 @@ def _write_text(game, source, folders, new_texts, generated):
     return new_ids
 
 
+def _write_physics(source, folders, cars, generated):
+    """Overhauls retune every car, so physics from a mod made on the stock game move onto the overhaul's base car."""
+    stock = stock_physics()
+    based_on = {car["internal_name"]: car["based_on"] for _, car in cars}
+    found = {}
+    for folder in folders:
+        for rel in mod_files(folder):
+            match = CAR_PARAMS.fullmatch(rel)
+            if match:
+                found.setdefault(rel.lower(), (rel, match.group(1).lower()))
+    for rel, car in found.values():
+        if (source.winner(rel) / OVERHAUL_TAG).is_file():
+            continue
+        base = based_on.get(car, car)
+        base_rel = f"cars/{base}/cache/{base}.params"
+        if base not in stock or not source.game_has(base_rel):
+            continue
+        try:
+            text = rebase(source.text(rel), stock[base], source.game_read(base_rel).decode(ENCODING))
+        except PhysicsError:
+            # The mod's own file still loads, which is better than refusing Play over one odd file.
+            continue
+        target = generated / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(text.encode(ENCODING))
+
+
 def _check_paths(mods_dir, save_dir, out_dir):
     """The game opens paths with ANSI calls, and the DLL passes it UTF-8 bytes."""
     for path in (Path(mods_dir).resolve(), Path(save_dir).resolve(), out_dir):
@@ -542,6 +582,8 @@ def build_session(game, mods_dir, active, save_dir, out_dir):
     if cars or teams:
         car_table, team_table = _write_lists(source, cars, teams, generated)
     text = _write_text(game, source, folders, _new_texts(cars), generated)
+    if is_overhaul(game):
+        _write_physics(source, folders, cars, generated)
 
     file_roots = [folder / FILES_DIR for folder in reversed(folders) if (folder / FILES_DIR).is_dir()]
     session = {
