@@ -171,6 +171,12 @@ Tested in the game on a car skin slot: 1024×1024 and 512×256, with and without
 
 `files/cars/<car>/cache/<car>.params` is plain text. For example, `ENGINETORQUEMAX` sets engine power. Tripling it took Ballistik from 128 MPH to 176 MPH at the same point in a race.
 
+**Physics on NitroXFueled:** the overhaul changes the physics of every car. A project that you start from a NitroXFueled game folder gets an empty file, `nitroxfueled.tag`, and the zip carries it. The tag tells the tool that the car physics are already for NitroXFueled. Do not delete it.
+
+A mod without the tag was made on the stock game. When you press Play on NitroXFueled, the tool moves the physics of that mod's cars onto the overhaul's version of the base car. The mod's own changes stay, as a share of the stock value. For example, a car with 0.8 torque on a base car of 1.18 gets 1.5 × 0.8 / 1.18 ≈ 1.02 on NitroXFueled. The wheels stay as the mod has them. The mod's files do not change, so the same zip still works on the stock game.
+
+If you make a zip by hand for NitroXFueled, add an empty `nitroxfueled.tag` beside `mod.json`.
+
 ## Change game text
 
 Add a `strings.json` file to the project. Names are the game's internal text IDs:
@@ -200,6 +206,7 @@ files/...       loose files at game paths
 strings.json    optional
 cars.json       optional
 teams.json      optional
+nitroxfueled.tag  optional, empty: the car physics are for NitroXFueled
 ```
 
 `mod.json` holds `format_version`, `id`, `name`, `version`, `author`, `description`, `kind` and `requires_game`. The game opens files under `movies/` and `sound/` directly, so a mod cannot replace them, and the tool shows a warning for those files. A mod cannot change saves. Mods cannot contain programs, such as `.exe` or `.dll` files, because the game would load them and run their code. Only the base mod is native code.

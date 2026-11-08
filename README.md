@@ -2,7 +2,7 @@
 
 A mod manager and mod-making tool for the LGU Release by Bladez1992 of Hot Wheels World Race (PC, 2003). It also supports the NitroXFueled 1.3 overhaul. Players add mod zips, choose which are active, and press Play. Modders start from a stock car, edit it in normal tools, and build a zip to share.
 
-You need your own copy of the game. This project contains no game files.
+You need your own copy of the game. This project contains no game files. The only game data it ships is the physics numbers of the stock cars, which the NitroXFueled support needs.
 
 ## Install
 
@@ -49,6 +49,8 @@ On NitroXFueled, added cars and teams get:
 - Their icons, logos and team names added to the overhaul's HD art, so Results and car select show every team.
 - On car select, their still picture in their team's garage, or the mod's own render clip if it has one. See [docs/making-mods.md](docs/making-mods.md).
 - The logo of their own team, although the overhaul orders its car list differently.
+
+NitroXFueled also changes the physics of every car. A mod made on the stock game would be much slower there. When you press Play on NitroXFueled, the tool moves the physics of each such mod's cars onto the overhaul's version of the base car. The mod's own changes stay, as a share of the stock values, and its wheels stay as they are. A mod made on NitroXFueled has a `nitroxfueled.tag` file, and the tool leaves its physics as they are. See [docs/making-mods.md](docs/making-mods.md).
 
 An overhaul's save can be different from a stock save. NitroXFueled crashes on a stock save. Profiles are shared between game folders, so give each game its own data folder:
 
