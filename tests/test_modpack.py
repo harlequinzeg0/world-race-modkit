@@ -295,3 +295,16 @@ def test_an_empty_logo_field_is_refused():
 
 def test_a_car_can_name_a_rim_colour():
     assert parse_cars(json.dumps([{**CAR, "rim_colour": "blue"}]))[0]["rim_colour"] == "blue"
+
+
+def test_overhaul_tag_is_accepted(tmp_path):
+    path = make_zip({"mod.json": GOOD, "nitroxfueled.tag": b""}, tmp_path)
+    assert validate_zip(path).id == "neon_mill"
+    install_zip(path, tmp_path / "mods")
+    assert (tmp_path / "mods/neon_mill/nitroxfueled.tag").is_file()
+
+
+def test_overhaul_tag_only_at_the_root(tmp_path):
+    path = make_zip({"mod.json": GOOD, "sub/nitroxfueled.tag": b""}, tmp_path)
+    with pytest.raises(ModError, match="outside the mod layout"):
+        validate_zip(path)

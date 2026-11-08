@@ -20,7 +20,7 @@ from hashlib import sha256
 from pathlib import Path
 
 from .gameinfo import RETAIL_SHA256
-from .gamefiles import game_files
+from .gamefiles import game_files, is_overhaul
 from .bed import BedError
 from .bog import BogError, bog_to_dds, dds_to_bog
 from .icons import (
@@ -48,6 +48,7 @@ from .modpack import (
     FORMAT_VERSION,
     MANIFEST,
     NAME_PATTERN,
+    OVERHAUL_TAG,
     STRINGS,
     TEAMS,
     ModError,
@@ -181,6 +182,12 @@ def _write_details(project, car):
     _write(project / MANIFEST, json.dumps(asdict(info), indent=2).encode())
 
 
+def _write_tag(project, game):
+    """The project's .params come from this game, so an overhaul's numbers must not be rebased again."""
+    if is_overhaul(game):
+        _write(project / OVERHAUL_TAG, b"")
+
+
 def create_car_project(game, car, dest, progress=None):
     dest = Path(dest)
     archive = game_files(game)
@@ -201,6 +208,7 @@ def create_car_project(game, car, dest, progress=None):
 
     _write_reference(dest, archive, car)
     _write_details(dest, car)
+    _write_tag(dest, game)
     return dest
 
 
@@ -252,6 +260,7 @@ def create_new_car_project(game, base, new_name, team, dest, progress=None):
     _export_icons(dest, archive, base, new_name)
     _write_reference(dest, archive, base)
     _write_details(dest, new_name)
+    _write_tag(dest, game)
     car = {
         "internal_name": new_name,
         "team": team,
@@ -350,6 +359,8 @@ def build_mod_zip(project, game, out):
             archive.writestr(MANIFEST, manifest)
             for name in lists:
                 archive.writestr(name, (project / name).read_bytes())
+            if (project / OVERHAUL_TAG).is_file():
+                archive.writestr(OVERHAUL_TAG, b"")
             for rel, data in files.items():
                 archive.writestr(f"{FILES_DIR}/{rel}", data)
         validate_zip(temp)

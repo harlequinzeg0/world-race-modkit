@@ -51,6 +51,12 @@ class StubArchive:
 @pytest.fixture
 def stock(monkeypatch):
     monkeypatch.setattr(template, "game_files", StubArchive)
+    monkeypatch.setattr(template, "is_overhaul", lambda game: False)
+
+
+@pytest.fixture
+def overhaul_stock(stock, monkeypatch):
+    monkeypatch.setattr(template, "is_overhaul", lambda game: True)
 
 
 @pytest.fixture
@@ -436,3 +442,30 @@ def test_a_painted_low_texture_is_not_replaced(new_car, tmp_path):
     z = build_mod_zip(new_car, "game", tmp_path / "m.zip")
     with zipfile.ZipFile(z) as archive:
         assert archive.read("files/cars/neon/cache/tex_low/second_part.bog").endswith(low[128:])
+
+
+def test_project_from_stock_has_no_tag(project, new_car):
+    assert not (project / "nitroxfueled.tag").exists()
+    assert not (new_car / "nitroxfueled.tag").exists()
+
+
+def test_project_from_an_overhaul_has_the_tag(overhaul_stock, tmp_path):
+    assert (create_car_project("game", "tm", tmp_path / "tm") / "nitroxfueled.tag").is_file()
+    assert (create_new_car_project("game", "tm", "neon", "road_beasts", tmp_path / "neon") / "nitroxfueled.tag").is_file()
+
+
+def test_build_copies_the_tag(overhaul_stock, tmp_path):
+    project = create_car_project("game", "tm", tmp_path / "tm")
+    (project / "files/cars/tm/cache/tm.params").write_bytes(b"ENGINETORQUEMAX 2.0\r\n")
+    assert "nitroxfueled.tag" in names(build_mod_zip(project, "game", tmp_path / "m.zip"))
+
+
+def test_build_without_tag_has_none(project, tmp_path):
+    (project / "files/cars/tm/cache/tm.params").write_bytes(b"ENGINETORQUEMAX 2.0\r\n")
+    assert "nitroxfueled.tag" not in names(build_mod_zip(project, "game", tmp_path / "m.zip"))
+
+
+def test_tag_alone_is_not_a_change(overhaul_stock, tmp_path):
+    project = create_car_project("game", "tm", tmp_path / "tm")
+    with pytest.raises(ProjectError, match="nothing changed"):
+        build_mod_zip(project, "game", tmp_path / "m.zip")

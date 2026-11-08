@@ -34,6 +34,11 @@ class LooseFiles:
         return self._files[path.lower()][1].read_bytes()
 
 
+def is_overhaul(game_dir):
+    """Overhauls run on loose files, so a game folder with no archive is one."""
+    return not (Path(game_dir) / ARCHIVE_INDEX).is_file()
+
+
 def game_files(game_dir):
     game_dir = Path(game_dir)
     if (game_dir / ARCHIVE_INDEX).is_file():

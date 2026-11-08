@@ -24,6 +24,8 @@ STRINGS = "strings.json"
 CARS = "cars.json"
 TEAMS = "teams.json"
 FILES_DIR = "files"
+# An empty file that says the mod's car physics are already for NitroXFueled, so merge leaves them as they are.
+OVERHAUL_TAG = "nitroxfueled.tag"
 
 ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$")
 # These names go into XML attributes and folder names. Stock cars 24_7 and 40_somethin start with a digit.
@@ -171,7 +173,7 @@ def _check_member(member):
     # The game loads DLLs from its folder, so a mod could otherwise run code.
     if parts[-1].lower().endswith(BLOCKED_SUFFIXES):
         raise ModError(f"Mods cannot contain programs: {name}")
-    if name not in (MANIFEST, STRINGS, CARS, TEAMS) and not name.startswith(f"{FILES_DIR}/"):
+    if name not in (MANIFEST, STRINGS, CARS, TEAMS, OVERHAUL_TAG) and not name.startswith(f"{FILES_DIR}/"):
         raise ModError(f"File outside the mod layout: {name}")
 
 

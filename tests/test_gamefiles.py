@@ -1,7 +1,7 @@
 import pytest
 
 from wrmod.bark import Archive
-from wrmod.gamefiles import LooseFiles, game_files
+from wrmod.gamefiles import LooseFiles, game_files, is_overhaul
 
 
 @pytest.fixture
@@ -47,3 +47,9 @@ def test_a_folder_with_no_archive_and_no_game_data_is_refused(tmp_path):
 
 def test_a_game_with_an_archive_uses_it(game_dir):
     assert isinstance(game_files(game_dir), Archive)
+
+
+def test_a_folder_without_the_archive_is_an_overhaul(tmp_path):
+    assert is_overhaul(tmp_path)
+    (tmp_path / "harchive.bah").write_bytes(b"")
+    assert not is_overhaul(tmp_path)
