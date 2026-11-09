@@ -86,6 +86,7 @@ uv run --script worldrace.py bog2dds IN.bog OUT.dds
 uv run --script worldrace.py dds2bog IN.dds OUT.bog --like ORIGINAL.bog
 uv run --script worldrace.py template twin_mill PROJECT_FOLDER --game PATH
 uv run --script worldrace.py newcar ballistic neon_mill road_beasts PROJECT_FOLDER --game PATH
+uv run --script worldrace.py alternate PROJECT_FOLDER neon_mill_movie --game PATH
 uv run --script worldrace.py addon world_race_models.zip
 uv run --script worldrace.py build PROJECT_FOLDER mod.zip --game PATH
 uv run --script worldrace.py install mod.zip
@@ -99,7 +100,9 @@ Works now: texture, physics and text mods, new cars beside the stock ones, new c
 
 Not tested yet: a mod's own render clip in the game. On NitroXFueled, new car projects made from an overhaul car do not yet export its PNG and JPEG textures for editing.
 
-Not done yet: custom wheel models, effects refitted to a new body, new collision shapes, and new tracks. Tracks depend on decoding the game's track format.
+Not tested yet in a race: a hitbox edited in Blender, and a car's own Smashmouth cheat model.
+
+Not done yet: custom wheel models, effects refitted to a new body, and new tracks. Tracks depend on decoding the game's track format.
 
 ## Development
 

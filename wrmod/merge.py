@@ -73,6 +73,12 @@ SCREEN_ENTRY = re.compile(r'[ \t]*<car_rep ID="(\w+)".*?</car_rep>\r?\n', re.S)
 CAR_PARAMS = re.compile(r"cars/([^/]+)/cache/\1\.params", re.I)
 # Shared settings for every car, not one car's physics, so a mod's version is used as it is.
 NOT_REBASED = {"generic"}
+# The Smashmouth cheat swaps every car that names an alternate model, in this attribute order.
+ALTERNATE_ATTRIBUTES = ("alternate_internal_name", "alternate_icon_texture", "special_silhouette")
+# Stock's own cheat icon and highlight boxes, which every alternate uses.
+CHEAT_ICON_BOX = "CHEAT"
+CHEAT_SILHOUETTE_BOX = "cheat_hligh"
+ALTERNATE_NAME = re.compile(r'\balternate_internal_name="([^"]*)"')
 
 
 class MergeError(Exception):
@@ -134,6 +140,14 @@ def _set_attribute(element, name, value):
     if count != 1:
         raise MergeError(f"The stock entry has no {name}: {element[:60]}")
     return changed
+
+
+def _drop_attribute(element, name):
+    return re.sub(rf'\s+\b{name}="[^"]*"', "", element, count=1)
+
+
+def _add_attribute(element, name, value):
+    return re.sub(r"\s*/>$", f' {name}="{value}"/>', element, count=1)
 
 
 def _text_name(car):
@@ -200,18 +214,24 @@ def _check_teams(teams, source):
     return ids
 
 
-def _check_cars(cars, stock_names):
-    seen = set(stock_names)
+def _check_cars(cars, stock_names, stock_alternates):
+    seen = set(stock_names) | stock_alternates
     for folder, car in cars:
         name = car["internal_name"]
-        if name in seen:
-            raise MergeError(f"Car name {name} is already used")
-        seen.add(name)
         if car["based_on"] not in stock_names:
             raise MergeError(f"Car {name} is based on {car['based_on']}, which is not a stock car")
-        prefix = f"cars/{name}/"
-        if not any(rel.lower().startswith(prefix) for rel in mod_files(folder)):
-            raise MergeError(f"Mod {folder.name} has no files for car {name}. Every added car needs {prefix}")
+        for own in _own_names(car):
+            if own in seen:
+                raise MergeError(f"Car name {own} is already used")
+            seen.add(own)
+            prefix = f"cars/{own}/"
+            if not any(rel.lower().startswith(prefix) for rel in mod_files(folder)):
+                raise MergeError(f"Mod {folder.name} has no files for car {own}. Every added car needs {prefix}")
+
+
+def _own_names(car):
+    """The car's name, then the name of the model the Smashmouth cheat loads in its place."""
+    return [car["internal_name"]] + ([car["alternate"]] if "alternate" in car else [])
 
 
 def _make_rows(stock, cars, team_ids):
@@ -264,6 +284,12 @@ def _car_element(base, car, leaders, icons):
         changes["icon_box"] = car["internal_name"]
     for name, value in changes.items():
         element = _set_attribute(element, name, value)
+    # The cheat model belongs to the donor, so a car keeps only one it names itself.
+    for name in ALTERNATE_ATTRIBUTES:
+        element = _drop_attribute(element, name)
+    if "alternate" in car:
+        for name, value in zip(ALTERNATE_ATTRIBUTES, (car["alternate"], CHEAT_ICON_BOX, CHEAT_SILHOUETTE_BOX)):
+            element = _add_attribute(element, name, value)
     return element
 
 
@@ -486,8 +512,9 @@ def _write_lists(source, cars, teams, generated):
         raise MergeError(f"{CAR_INFO} has {len(elements)} cars, and the tool needs the stock {STOCK_CARS}")
     stock = [(_attribute(e, "internal_name"), _attribute(e, "team_name")) for e in elements]
     stock_names = [name for name, _ in stock]
+    stock_alternates = {match.group(1) for match in map(ALTERNATE_NAME.search, elements) if match}
     team_ids = _check_teams(teams, source)
-    _check_cars(cars, stock_names)
+    _check_cars(cars, stock_names, stock_alternates)
     rows = _make_rows(stock, cars, team_ids)
     _check_team_cars(teams, cars, rows)
     leaders = {team["leader"] for team in teams}
@@ -528,7 +555,7 @@ def _write_text(game, source, folders, new_texts, generated):
 def _write_physics(source, folders, cars, generated):
     """Overhauls retune every car, so physics from a mod made on the stock game move onto the overhaul's base car."""
     stock = stock_physics()
-    based_on = {car["internal_name"]: car["based_on"] for _, car in cars}
+    based_on = {own: car["based_on"] for _, car in cars for own in _own_names(car)}
     found = {}
     for folder in folders:
         for rel in mod_files(folder):

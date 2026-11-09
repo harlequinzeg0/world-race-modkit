@@ -13,7 +13,8 @@ from test_rom import material_record, tag_record
 from wrmod.addon import ADDON_NAME, build_addon
 from wrmod.bark import Archive
 from wrmod.bog import dds_to_bog, parse_header
-from wrmod.rom import Material, Mesh, Rom, Tag, Vertex, read_rom, write_rom, write_points
+from wrmod.hsc import Hitbox, read_hsc, write_hsc
+from wrmod.rom import Material, Mesh, Rom, Tag, Vertex, read_rom, work_out_bounds, write_rom, write_points
 from wrmod.wheels import read_wheels, visible_radius, visible_width
 
 BLENDER = Path(os.environ.get("WRMOD_BLENDER", r"C:\Program Files\Blender Foundation\Blender 4.5\blender.exe"))
@@ -55,12 +56,28 @@ def shadow_rom():
     return Rom(tags=[Tag(tag_record(b"com"))], meshes=[Mesh(0, 0xFFFFFFFF, [(0, 1, 2)], vertices)])
 
 
+def box_planes(bounds):
+    planes = []
+    for axis in range(3):
+        normal = [0.0, 0.0, 0.0]
+        normal[axis] = 1.0
+        planes.append((*normal, -bounds[axis + 3]))
+        normal[axis] = -1.0
+        planes.append((*normal, bounds[axis]))
+    return planes
+
+
+SAMPLE_BOUNDS = work_out_bounds(sample_rom().meshes)
+SAMPLE_HITBOX = Hitbox(1, [box_planes(SAMPLE_BOUNDS)], [(0.0, 0.3, 0.5, 0.2)], [(0.5, 0.0, -1.0, 0.6), (-0.5, 0.0, 1.0, 0.6)])
+
+
 @pytest.fixture
 def project(tmp_path):
     folder = tmp_path / "project"
     cache = folder / "files/cars" / CAR / "cache"
     cache.mkdir(parents=True)
-    (folder / "cars.json").write_text(json.dumps([{"internal_name": CAR}]))
+    (folder / "cars.json").write_text(json.dumps([{"internal_name": CAR, "based_on": "donor"}]))
+    (cache / f"{CAR}.hsc").write_bytes(write_hsc(SAMPLE_HITBOX))
     for level in ("med", "lower_med", "low"):
         (cache / f"{CAR}_{level}.rom").write_bytes(write_rom(sample_rom()))
     for level in ("high", "med", "lower_med"):
@@ -100,7 +117,7 @@ def triangles(rom):
 
 def test_addon_zip_holds_the_addon_and_the_library(tmp_path):
     with zipfile.ZipFile(build_addon(tmp_path / "a.zip")) as z:
-        assert set(z.namelist()) == {f"{ADDON_NAME}/__init__.py", f"{ADDON_NAME}/rom.py", f"{ADDON_NAME}/wheels.py"}
+        assert set(z.namelist()) == {f"{ADDON_NAME}/{name}.py" for name in ("__init__", "rom", "wheels", "hsc")}
         assert b"bl_info" in z.read(f"{ADDON_NAME}/__init__.py")
         assert z.read(f"{ADDON_NAME}/rom.py").startswith(b'"""Read and write')
 
@@ -237,7 +254,7 @@ def list_first(project, name):
         (cache / f"{name}_{level}.shm").write_bytes(write_rom(shadow_rom()))
     (cache / f"{name}.pts").write_bytes(write_points(sample_rom().tags))
     cars = json.loads((project / "cars.json").read_text())
-    (project / "cars.json").write_text(json.dumps([{"internal_name": name}] + cars))
+    (project / "cars.json").write_text(json.dumps([{"internal_name": name, "based_on": "donor"}] + cars))
     return cache
 
 
@@ -311,7 +328,8 @@ def test_real_car_round_trip(game_dir, tmp_path):
     project = tmp_path / "project"
     cache = project / "files/cars" / CAR / "cache"
     cache.mkdir(parents=True)
-    (project / "cars.json").write_text(json.dumps([{"internal_name": CAR}]))
+    (project / "cars.json").write_text(json.dumps([{"internal_name": CAR, "based_on": "ballistic"}]))
+    (cache / f"{CAR}.hsc").write_bytes(archive.read("cars/ballistic/cache/ballistic.hsc"))
     for level in ("med", "lower_med", "low"):
         (cache / f"{CAR}_{level}.rom").write_bytes(archive.read(f"cars/ballistic/cache/ballistic_{level}.rom"))
     for level in ("high", "med", "lower_med"):
@@ -325,6 +343,8 @@ def test_real_car_round_trip(game_dir, tmp_path):
     assert sum(len(m.vertices) for m in rom.meshes) <= sum(len(m.vertices) for m in stock.meshes) * 1.05
     assert [m.flags for m in rom.meshes] == [m.flags for m in stock.meshes]
     assert 500 < triangles(read_level(project, "low")) < 1500
+    stock_planes = [p for p in read_hsc(archive.read("cars/ballistic/cache/ballistic.hsc")).plane_groups[0] if any(p[:3])]
+    assert same_planes(hitbox_of(project).plane_groups[0], stock_planes, 1e-4)
 
 
 def test_a_donor_models_tags_do_not_replace_the_cars(project, tmp_path):
@@ -697,3 +717,76 @@ def test_an_unchanged_colour_keeps_the_stock_name(light_tags, tmp_path):
     assert run(light_tags, "roundtrip", tmp_path).get("exported")
     names = [t.name for t in read_level(light_tags).tags]
     assert names.count(TAIL) == 2 and HEAD in names and "backlight" in names
+
+
+def hitbox_of(project):
+    return read_hsc((cache_of(project) / f"{CAR}.hsc").read_bytes())
+
+
+def flat(entries):
+    return [value for entry in entries for value in entry]
+
+
+def same_planes(found, expected, tolerance=1e-4):
+    return len(found) == len(expected) and all(
+        any(all(abs(a - b) < tolerance for a, b in zip(plane, other)) for other in found) for plane in expected
+    )
+
+
+def test_import_brings_in_the_hitbox(project, tmp_path):
+    report = run(project, "import", tmp_path)
+    assert report["hitbox"] == {"hull": 1, "upper": 1, "body": 2, "wire": True, "rendered": False}
+    extent = [SAMPLE_BOUNDS[axis + 3] - SAMPLE_BOUNDS[axis] for axis in (0, 2, 1)]
+    assert report["hitbox_extent"] == pytest.approx(extent, abs=1e-4)
+
+
+def test_importing_twice_keeps_the_edited_hitbox(project, tmp_path):
+    assert run(project, "hitbox_again", tmp_path)["hitbox_after"]["body"] == 3
+
+
+def test_the_hitbox_is_not_exported_as_body(project, tmp_path):
+    before = triangles(read_level(project))
+    assert run(project, "roundtrip", tmp_path).get("exported")
+    assert triangles(read_level(project)) == before
+
+
+def test_an_unedited_hitbox_exports_as_it_was(project, tmp_path):
+    assert run(project, "roundtrip", tmp_path).get("exported")
+    hitbox = hitbox_of(project)
+    assert same_planes(hitbox.plane_groups[0], SAMPLE_HITBOX.plane_groups[0])
+    assert flat(hitbox.upper_spheres) == pytest.approx(flat(SAMPLE_HITBOX.upper_spheres), abs=1e-5)
+    assert flat(hitbox.body_spheres) == pytest.approx(flat(SAMPLE_HITBOX.body_spheres), abs=1e-5)
+
+
+def test_a_scaled_hull_and_a_moved_sphere_reach_the_file(project, tmp_path):
+    assert run(project, "hitbox_edit", tmp_path).get("exported")
+    hitbox = hitbox_of(project)
+    # The driver doubles the hull on Blender X, which is game X.
+    wide = [b * (2 if axis % 3 == 0 else 1) for axis, b in enumerate(SAMPLE_BOUNDS)]
+    assert same_planes(hitbox.plane_groups[0], box_planes(wide))
+    # It moves the first body sphere 0.5 up on Blender Z, which is game Y, and doubles its size.
+    assert hitbox.body_spheres[0] == pytest.approx((0.5, 0.5, -1.0, 1.2), abs=1e-5)
+
+
+def test_a_duplicated_sphere_joins_its_list(project, tmp_path):
+    assert run(project, "hitbox_duplicate", tmp_path).get("exported")
+    assert len(hitbox_of(project).body_spheres) == 3 and len(hitbox_of(project).upper_spheres) == 1
+
+
+def test_a_concave_hull_exports_as_its_convex_shape(project, tmp_path):
+    assert run(project, "hitbox_dent", tmp_path).get("exported")
+    assert same_planes(hitbox_of(project).plane_groups[0], SAMPLE_HITBOX.plane_groups[0])
+
+
+def test_a_hidden_hitbox_leaves_the_file_alone(project, tmp_path):
+    before = (cache_of(project) / f"{CAR}.hsc").read_bytes()
+    assert run(project, "hitbox_hidden", tmp_path).get("exported")
+    assert (cache_of(project) / f"{CAR}.hsc").read_bytes() == before
+
+
+@pytest.mark.parametrize("mode, words", [("hitbox_stretched", "stretched"), ("hitbox_stray", "not a hitbox sphere"), ("hitbox_no_hull", "no hull")])
+def test_a_bad_hitbox_is_refused_and_writes_nothing(project, tmp_path, mode, words):
+    before = contents(cache_of(project))
+    assert words in run(project, mode, tmp_path)["error"]
+    assert contents(cache_of(project)) == before
+

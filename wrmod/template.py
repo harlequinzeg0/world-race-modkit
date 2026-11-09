@@ -230,6 +230,48 @@ def _base_name_path(path, base, new):
     return "/".join(parts)
 
 
+def _copy_car(archive, paths, dest, base, new_name, progress=None):
+    for done, path in enumerate(paths, start=1):
+        data = archive.read(path)
+        target = _renamed_path(path, base, new_name)
+        if path.lower().endswith(".bog"):
+            alias = _base_name_path(path, base, new_name)
+            _export_texture(dest, target, data, source=path, aliases=[alias] if alias else [])
+        else:
+            _write(dest / FILES_DIR / target, data)
+        if progress:
+            progress(done, len(paths))
+
+
+def _stock_alternates(archive):
+    return set(re.findall(r'\balternate_internal_name="([^"]+)"', archive.read(CAR_INFO).decode("latin-1")))
+
+
+def add_alternate(game, project, name):
+    """Gives a new car a second model, which the Smashmouth cheat loads in its place.
+
+    The model starts as a copy of the base car, under its own name, for editing in Blender.
+    """
+    project = Path(project)
+    cars = _read_list(project, CARS)
+    if len(cars) != 1:
+        raise ProjectError("An alternate model needs a new car project with one car.")
+    car = cars[0]
+    if "alternate" in car:
+        raise ProjectError(f"{car['internal_name']} already has the alternate model {car['alternate']}.")
+    if not NAME_PATTERN.match(name):
+        raise ProjectError(f"Bad car name: {name!r}. Use lower case letters, digits and underscores.")
+    archive = game_files(game)
+    if name == car["internal_name"] or name in list_stock_cars(game) or name in _stock_alternates(archive):
+        raise ProjectError(f"{name} is already a car name")
+    base = car["based_on"]
+    prefix = f"cars/{base}/".lower()
+    _copy_car(archive, [p for p in archive.paths() if p.lower().startswith(prefix)], project, base, name)
+    car["alternate"] = name
+    _write(project / CARS, json.dumps(cars, indent=2).encode())
+    return name
+
+
 def create_new_car_project(game, base, new_name, team, dest, progress=None):
     dest = Path(dest)
     archive = game_files(game)
@@ -245,18 +287,7 @@ def create_new_car_project(game, base, new_name, team, dest, progress=None):
     if dest.exists():
         raise ProjectError(f"{dest} already exists")
 
-    paths = _car_paths(archive, base)
-    for done, path in enumerate(paths, start=1):
-        data = archive.read(path)
-        target = _renamed_path(path, base, new_name)
-        if path.lower().endswith(".bog"):
-            alias = _base_name_path(path, base, new_name)
-            _export_texture(dest, target, data, source=path, aliases=[alias] if alias else [])
-        else:
-            _write(dest / FILES_DIR / target, data)
-        if progress:
-            progress(done, len(paths))
-
+    _copy_car(archive, _car_paths(archive, base), dest, base, new_name, progress)
     _export_icons(dest, archive, base, new_name)
     _write_reference(dest, archive, base)
     _write_details(dest, new_name)

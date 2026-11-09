@@ -12,4 +12,5 @@ def build_addon(out):
         archive.write(HERE / "blender_addon.py", f"{ADDON_NAME}/__init__.py")
         archive.write(HERE / "rom.py", f"{ADDON_NAME}/rom.py")
         archive.write(HERE / "wheels.py", f"{ADDON_NAME}/wheels.py")
+        archive.write(HERE / "hsc.py", f"{ADDON_NAME}/hsc.py")
     return out

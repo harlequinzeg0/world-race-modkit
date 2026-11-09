@@ -118,6 +118,10 @@ def _check_car(car):
     _check_text(car.get("display_name"), CARS)
     if "driver" in car:
         _check_text(car["driver"], CARS)
+    if "alternate" in car:
+        _check_name(car["alternate"], CARS)
+        if car["alternate"] == car["internal_name"]:
+            raise ModError(f"{CARS}: the alternate of {car['internal_name']} must have its own name")
     if car.get("rim_colour", RIM_COLOURS[0]) not in RIM_COLOURS:
         raise ModError(f"{CARS}: rim_colour must be one of {', '.join(RIM_COLOURS)}")
     if not isinstance(car.get("ai_car", False), bool):

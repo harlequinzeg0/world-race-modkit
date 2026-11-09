@@ -469,3 +469,34 @@ def test_tag_alone_is_not_a_change(overhaul_stock, tmp_path):
     project = create_car_project("game", "tm", tmp_path / "tm")
     with pytest.raises(ProjectError, match="nothing changed"):
         build_mod_zip(project, "game", tmp_path / "m.zip")
+
+
+def test_a_cheat_model_copies_the_base_car_under_its_own_name(new_car):
+    assert template.add_alternate("game", new_car, "neon_cheat") == "neon_cheat"
+    assert (new_car / "files/cars/neon_cheat/cache/neon_cheat.params").read_bytes() == STOCK["cars/tm/cache/tm.params"]
+    assert (new_car / "textures/cars/neon_cheat/cache/tex_high/neon_cheat_stunt.bog.dds").is_file()
+    assert not (new_car / "textures/frontend/neon_cheat_movie.bog.dds").exists()
+    assert json.loads((new_car / "cars.json").read_text())[0]["alternate"] == "neon_cheat"
+
+
+def test_a_cheat_model_goes_in_the_zip(new_car, tmp_path):
+    template.add_alternate("game", new_car, "neon_cheat")
+    names = zipfile.ZipFile(build_mod_zip(new_car, "game", tmp_path / "out.zip")).namelist()
+    assert "files/cars/neon_cheat/cache/neon_cheat.params" in names
+
+
+@pytest.mark.parametrize("name", ["neon", "tm", "Bad Name"])
+def test_a_cheat_model_needs_a_new_valid_name(new_car, name):
+    with pytest.raises(ProjectError):
+        template.add_alternate("game", new_car, name)
+
+
+def test_a_car_has_one_cheat_model(new_car):
+    template.add_alternate("game", new_car, "neon_cheat")
+    with pytest.raises(ProjectError, match="already"):
+        template.add_alternate("game", new_car, "neon_cheat2")
+
+
+def test_a_stock_car_project_cannot_have_a_cheat_model(project):
+    with pytest.raises(ProjectError):
+        template.add_alternate("game", project, "tm_cheat")

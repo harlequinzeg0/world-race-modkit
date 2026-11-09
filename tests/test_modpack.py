@@ -282,6 +282,13 @@ def test_driver_is_optional():
     assert parse_cars(json.dumps([car]).encode()) == [car]
 
 
+@pytest.mark.parametrize("alternate", ["neon", "Bad Name", "", 5])
+def test_bad_cheat_model_name_refused(alternate):
+    car = {"internal_name": "neon", "team": "road_beasts", "display_name": "Neon", "based_on": "tm", "alternate": alternate}
+    with pytest.raises(ModError):
+        parse_cars(json.dumps([car]).encode())
+
+
 def test_a_team_needs_no_logo_field():
     team = {"id": "neon", "display_name": "Neon", "leader": "n1", "base_team": "road_beasts"}
     assert parse_teams(json.dumps([team]).encode()) == [team]

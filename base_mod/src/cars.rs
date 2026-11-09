@@ -22,6 +22,7 @@ const SET_TEXTURE: usize = 0x43CB80;
 const SET_BOX: usize = 0x43CBE0;
 const QUICK_RACE_SETUP: usize = 0x48FB00;
 const LEAGUE_SETUP: usize = 0x499E40;
+const SET_UP_RACE_CAR: usize = 0x45D9C0;
 const LOAD_CAR_MODELS: usize = 0x46FA30;
 const WHEEL_FOLDER: usize = 0x470380;
 const STOCK_WHEEL_FOLDER: usize = 0x5EFEFC;
@@ -33,6 +34,7 @@ const CAR_TEAM: usize = 0xC;
 const CAR_AI: usize = 0x60;
 
 const CAR_NAME: usize = 0x10;
+const CAR_ALTERNATE_NAME: usize = 0x14;
 
 // Car list fields.
 const LIST_CAPACITY: usize = 4;
@@ -56,6 +58,7 @@ const OFF_SCREEN_X: f32 = 10.0;
 type Unary = unsafe extern "thiscall" fn(*mut u8);
 type Named = unsafe extern "thiscall" fn(*mut c_void, *const i8) -> *mut c_void;
 type LoadCarModels = unsafe extern "thiscall" fn(*mut u8, *const u8, i32, i32) -> u8;
+type SetUpRaceCar = unsafe extern "thiscall" fn(*mut u8, u32, *const i8, *const i8) -> u8;
 
 static LOAD_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static DESTROY_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
@@ -67,6 +70,7 @@ static LOGOS_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static QUICK_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static LEAGUE_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static CAR_MODELS_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
+static RACE_CAR_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static WHEEL_FOLDER_NOW: AtomicUsize = AtomicUsize::new(STOCK_WHEEL_FOLDER);
 
 static CARS_MADE: AtomicU32 = AtomicU32::new(0);
@@ -87,6 +91,8 @@ struct Car {
     team: usize,
     stock_number: u32,
     ai: bool,
+    /// The internal name, and the alternate name that a cheat loads in its place.
+    names: Vec<String>,
 }
 
 /// The rebuilt list. The grid must live as long as the game's list points at it.
@@ -106,6 +112,10 @@ unsafe fn read(base: *const u8, offset: usize) -> u32 {
 
 unsafe fn write(base: *mut u8, offset: usize, value: u32) {
     std::ptr::write_unaligned(base.add(offset) as *mut u32, value);
+}
+
+unsafe fn c_text(address: u32) -> Option<String> {
+    (address != 0).then(|| CStr::from_ptr(address as *const i8).to_string_lossy().into_owned())
 }
 
 unsafe fn restore_list(this: *mut u8) {
@@ -133,7 +143,8 @@ unsafe fn rebuild_list(this: *mut u8) {
                 write(object, CAR_TEAM, row.base_team as u32);
             }
             let stock_number = read(object, CAR_TEAM);
-            cars.push(Car { object: object as usize, team, stock_number, ai: *object.add(CAR_AI) != 0 });
+            let names = [CAR_NAME, CAR_ALTERNATE_NAME].iter().filter_map(|field| c_text(read(object, *field))).collect();
+            cars.push(Car { object: object as usize, team, stock_number, ai: *object.add(CAR_AI) != 0, names });
         }
     }
     let grid: Vec<u32> = teams::grid_indices(current, shape().width).iter().map(|index| *array.add(*index as usize)).collect();
@@ -341,6 +352,20 @@ unsafe extern "C" fn wheel_folder_detour() -> usize {
     WHEEL_FOLDER_NOW.load(Ordering::SeqCst)
 }
 
+/// The team number picks the stunt combo and the combo effect colours. Quick Race makes its cars
+/// while the opponent shuffle has changed the numbers, but the HUD shows the combo of the number
+/// that comes back after it, so the car keeps its own number here.
+unsafe extern "thiscall" fn race_car_detour(this: *mut u8, team: u32, name: *const i8, params: *const i8) -> u8 {
+    let text = CStr::from_ptr(name).to_string_lossy();
+    let own = LOADED.lock().unwrap().as_ref().and_then(|loaded| own_number(&loaded.cars, &text));
+    let original: SetUpRaceCar = std::mem::transmute(RACE_CAR_ORIGINAL.load(Ordering::SeqCst));
+    original(this, own.unwrap_or(team), name, params)
+}
+
+fn own_number(cars: &[Car], name: &str) -> Option<u32> {
+    cars.iter().find(|car| car.names.iter().any(|own| own == name)).map(|car| car.stock_number)
+}
+
 unsafe extern "thiscall" fn league_detour(this: *mut u8) {
     renumber_teams(&racers(read(this, 0x20) as *const u32, read(this, 0x1C) as usize));
     let original: Unary = std::mem::transmute(LEAGUE_ORIGINAL.load(Ordering::SeqCst));
@@ -437,6 +462,7 @@ fn hooks() -> Vec<Hook> {
         site(LOAD_CAR_MODELS, &[0x81, 0xEC, 0x50, 0x02, 0x00, 0x00], car_models_detour as usize, &CAR_MODELS_ORIGINAL),
         Hook { address: WHEEL_FOLDER, expected: &[0xB8, 0xFC, 0xFE, 0x5E, 0x00], detour: wheel_folder_detour as usize, original: None },
         site(LEAGUE_SETUP, &[0x81, 0xEC, 0x5C, 0x01, 0x00, 0x00], league_detour as usize, &LEAGUE_ORIGINAL),
+        site(SET_UP_RACE_CAR, &[0x8B, 0x44, 0x24, 0x04, 0x81, 0xEC, 0x0C, 0x01, 0x00, 0x00], race_car_detour as usize, &RACE_CAR_ORIGINAL),
     ]
 }
 
@@ -445,4 +471,30 @@ pub fn parts(session: &Session) -> Result<(Vec<Hook>, Vec<Patch>), String> {
     let made = make_shape(session)?;
     let shape = SHAPE.get_or_init(|| made);
     Ok((hooks(), patches(session, shape.width, shape.teams)))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn car(names: &[&str], stock_number: u32) -> Car {
+        Car { object: 0, team: 0, stock_number, ai: true, names: names.iter().map(|name| name.to_string()).collect() }
+    }
+
+    #[test]
+    fn a_car_keeps_its_own_number() {
+        let cars = [car(&["deora2"], 3), car(&["reverb"], 3), car(&["synkro"], 0)];
+        assert_eq!(own_number(&cars, "synkro"), Some(0));
+    }
+
+    #[test]
+    fn the_cheat_model_finds_its_car() {
+        let cars = [car(&["super_tuned", "smashmouth"], 0)];
+        assert_eq!(own_number(&cars, "smashmouth"), Some(0));
+    }
+
+    #[test]
+    fn an_unknown_name_keeps_the_game_number() {
+        assert_eq!(own_number(&[car(&["deora2"], 3)], "nobody"), None);
+    }
 }

@@ -56,6 +56,10 @@ def _cmd_newcar(args):
     print(template.create_new_car_project(_game(args), args.base, args.name, args.team, args.dest))
 
 
+def _cmd_alternate(args):
+    print(template.add_alternate(_game(args), args.project, args.name))
+
+
 def _cmd_build(args):
     print(template.build_mod_zip(args.project, _game(args), args.out))
 
@@ -100,6 +104,7 @@ def _parser():
     add("template", _cmd_template, "car", "dest")
     add("newcar", _cmd_newcar, "base", "name", "team", "dest")
     add("addon", _cmd_addon, "out", game=False)
+    add("alternate", _cmd_alternate, "project", "name")
     add("build", _cmd_build, "project", "out")
     add("install", _cmd_install, "zip", game=False)
     add("play", _cmd_play, "profile")

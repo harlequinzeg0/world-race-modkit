@@ -867,3 +867,48 @@ def test_generic_params_is_never_rebased(overhaul_game, tmp_path, monkeypatch):
     monkeypatch.setattr(merge, "stock_physics", lambda: {"generic": read_physics(STOCK_PARAMS)})
     build(overhaul_game, [{"blobs": {"cars/generic/cache/generic.params": TUNED.encode("latin1")}}], tmp_path)
     assert not has_generated(tmp_path, "cars/generic/cache/generic.params")
+
+
+@pytest.fixture
+def cheat_base(stock, monkeypatch):
+    """The base car names a Smashmouth cheat model, like stock super_tuned."""
+    text = FILES["misc/cache/car_info.xml"].decode("latin1").replace(
+        '<CAR internal_name="ballistic"',
+        '<CAR internal_name="ballistic" alternate_internal_name="smashmouth" special_silhouette="cheat_hligh" alternate_icon_texture="CHEAT"',
+    )
+    monkeypatch.setitem(FILES, "misc/cache/car_info.xml", text.encode("latin1"))
+    return stock
+
+
+def test_a_new_car_does_not_take_its_donors_cheat_model(cheat_base, tmp_path):
+    build(cheat_base, [car_mod("neon")], tmp_path)
+    element = added_element(tmp_path, "neon")
+    assert "alternate" not in element and "special_silhouette" not in element
+
+
+def test_a_new_car_can_name_its_own_cheat_model(cheat_base, tmp_path):
+    mod = car_mod("neon", alternate="neon_cheat")
+    mod["files"].append("cars/neon_cheat/cache/neon_cheat.pts")
+    build(cheat_base, [mod], tmp_path)
+    element = added_element(tmp_path, "neon")
+    assert 'alternate_internal_name="neon_cheat"' in element
+    assert 'alternate_icon_texture="CHEAT"' in element and 'special_silhouette="cheat_hligh"' in element
+
+
+def test_a_cheat_model_needs_its_own_files(stock, tmp_path):
+    with pytest.raises(MergeError, match="neon_cheat"):
+        build(stock, [car_mod("neon", alternate="neon_cheat")], tmp_path)
+
+
+def test_a_cheat_model_cannot_take_a_stock_cheat_name(cheat_base, tmp_path):
+    mod = car_mod("neon", alternate="smashmouth")
+    mod["files"].append("cars/smashmouth/cache/smashmouth.pts")
+    with pytest.raises(MergeError, match="smashmouth"):
+        build(cheat_base, [mod], tmp_path)
+
+
+def test_a_cheat_model_cannot_take_another_cars_name(stock, tmp_path):
+    mod = car_mod("neon", alternate="ballistic")
+    mod["files"].append("cars/ballistic/cache/ballistic.pts")
+    with pytest.raises(MergeError, match="ballistic"):
+        build(stock, [mod], tmp_path)

@@ -28,8 +28,37 @@ def in_lights(obj):
     return any("rom_brake" in collection for collection in obj.users_collection)
 
 
+def in_hitbox(obj):
+    return any("rom_hitbox" in collection for collection in obj.users_collection)
+
+
 def meshes():
-    return [o for o in bpy.context.scene.objects if o.type == "MESH" and "rom_wheel" not in o and not in_lights(o)]
+    return [o for o in bpy.context.scene.objects if o.type == "MESH" and "rom_wheel" not in o and not in_lights(o) and not in_hitbox(o)]
+
+
+def hitbox_object(name):
+    return next(o for o in bpy.context.scene.objects if in_hitbox(o) and o.name == name)
+
+
+def hitbox_extent():
+    """The hull's size on Blender's X, Y and Z, or None when the scene has no hull."""
+    hull = next((o for o in bpy.context.scene.objects if in_hitbox(o) and o.type == "MESH"), None)
+    if hull is None:
+        return None
+    points = [v.co for v in hull.data.vertices]
+    return [max(p[axis] for p in points) - min(p[axis] for p in points) for axis in range(3)]
+
+
+def hitbox_summary():
+    objects = [o for o in bpy.context.scene.objects if in_hitbox(o)]
+    hulls = [o for o in objects if o.type == "MESH"]
+    return {
+        "hull": len(hulls),
+        "upper": sum(o.name.startswith("hitbox_upper") for o in objects),
+        "body": sum(o.name.startswith("hitbox_body") for o in objects),
+        "wire": all(o.display_type == "WIRE" for o in hulls),
+        "rendered": any(not o.hide_render for o in hulls),
+    }
 
 
 def lights(car="neon"):
@@ -96,6 +125,9 @@ try:
     report["tag_places"] = {
         o["rom_tag"]: list(o.location) for o in bpy.context.scene.objects if "rom_tag" in o
     }
+    if any(in_hitbox(o) for o in bpy.context.scene.objects):
+        report["hitbox"] = hitbox_summary()
+        report["hitbox_extent"] = hitbox_extent()
 
     if mode == "roundtrip":
         export()
@@ -230,7 +262,8 @@ try:
         light_collection().objects.link(sphere)
         export()
     elif mode == "lights_body_part":
-        part = max(meshes(), key=lambda o: len(o.data.polygons))
+        # The smaller part, so the body left behind still has a size for the hitbox to fit.
+        part = min(meshes(), key=lambda o: len(o.data.polygons))
         part.data.materials.clear()
         part.data.materials.append(bpy.data.materials["TLANG_lightning"])
         for collection in part.users_collection:
@@ -252,6 +285,45 @@ try:
             light.data.materials.clear()
             light.data.materials.append(bpy.data.materials["skin"])
         export()
+    elif mode == "hitbox_again":
+        copy = hitbox_object("hitbox_body_0").copy()
+        hitbox_object("hitbox_body_0").users_collection[0].objects.link(copy)
+        bpy.ops.import_scene.world_race_rom(filepath=rom_path)
+    elif mode == "hitbox_edit":
+        hull = next(o for o in bpy.context.scene.objects if in_hitbox(o) and o.type == "MESH")
+        hull.scale = (2.0, 1.0, 1.0)
+        sphere = hitbox_object("hitbox_body_0")
+        sphere.location.z += 0.5
+        sphere.scale = (2.0, 2.0, 2.0)
+        export()
+    elif mode == "hitbox_duplicate":
+        sphere = hitbox_object("hitbox_body_1")
+        copy = sphere.copy()
+        sphere.users_collection[0].objects.link(copy)
+        copy.location.x += 0.3
+        export()
+    elif mode == "hitbox_dent":
+        hull = next(o for o in bpy.context.scene.objects if in_hitbox(o) and o.type == "MESH")
+        # The box's corners and one point inside it, with no faces: export must find the box again.
+        points = [tuple(v.co) for v in hull.data.vertices]
+        centre = tuple(sum(point[axis] for point in points) / len(points) for axis in range(3))
+        data = bpy.data.meshes.new("dented")
+        data.from_pydata(points + [centre], [], [])
+        hull.data = data
+        export()
+    elif mode == "hitbox_hidden":
+        hitbox_object("hitbox_body_0").users_collection[0].hide_viewport = True
+        export()
+    elif mode == "hitbox_stretched":
+        hitbox_object("hitbox_body_0").scale = (1.0, 2.0, 1.0)
+        export()
+    elif mode == "hitbox_stray":
+        stray = bpy.data.objects.new("stray", None)
+        hitbox_object("hitbox_body_0").users_collection[0].objects.link(stray)
+        export()
+    elif mode == "hitbox_no_hull":
+        bpy.data.objects.remove(next(o for o in bpy.context.scene.objects if in_hitbox(o) and o.type == "MESH"))
+        export()
     elif mode == "lights_again":
         bpy.ops.import_scene.world_race_rom(filepath=rom_path)
         report["lights"] = [o.name for o in lights()]
@@ -265,6 +337,9 @@ try:
             light.location = (0.0, 0.0, 0.5)
         export()
     report["objects_after"] = len(meshes())
+    if any(in_hitbox(o) for o in bpy.context.scene.objects):
+        report["hitbox_after"] = hitbox_summary()
+        report["hitbox_extent_after"] = hitbox_extent()
     report["modifiers_after"] = sum(len(o.modifiers) for o in meshes())
 except Exception:
     report["crash"] = traceback.format_exc()

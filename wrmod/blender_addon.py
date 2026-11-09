@@ -10,6 +10,9 @@ Wheels come from the car's .params file as stand-ins, because the wheel model is
 stays out of the add-on. Export writes their place and size back to that file.
 
 Brake lights are separate models. They come in as their own collection and go back to their own files.
+
+The hitbox comes in as its own collection: a see-through hull mesh and sphere empties. Export
+writes the hull's convex shape and the spheres back to the car's .hsc file.
 """
 import importlib
 import json
@@ -18,17 +21,21 @@ import re
 import struct
 from pathlib import Path
 
+import bmesh
 import bpy
 from bpy_extras.io_utils import ImportHelper
 from mathutils import Vector
 
+from . import hsc as hsc_format
 from . import rom as rom_format
 from . import wheels as wheel_format
 
 # Installing an add-on again reruns only this file, so an open Blender would keep the old library.
+importlib.reload(hsc_format)
 importlib.reload(rom_format)
 importlib.reload(wheel_format)
 
+from .hsc import Hitbox, HscError, hull_mesh, planes_from_faces, read_hsc, write_hsc
 from .rom import COM_TAG, Material, Mesh, RomError, Vertex, centre_of_mass, read_rom, work_out_bounds, write_points, write_rom
 from .wheels import params_radius, params_width, read_wheels, visible_radius, visible_width, write_wheels
 
@@ -74,6 +81,12 @@ LIGHT_COLOUR = "rom_light_colour"
 SAME_COLOUR = 0.005
 WHEEL_NAMES = {0: "front_left", 1: "front_right", 2: "back_left", 3: "back_right"}
 WHEEL_SEGMENTS = 32
+HITBOX_MARK = "rom_hitbox"
+# Which sphere list an empty belongs to, and its place in that list.
+HITBOX_LIST = "rom_hitbox_list"
+HITBOX_ORDER = "rom_hitbox_order"
+SPHERE_LISTS = ("upper", "body")
+SAME_SCALE = 1e-3
 
 
 class ExportError(Exception):
@@ -219,6 +232,39 @@ def add_brake_lights(context, path, car):
     return True
 
 
+def _sphere(name, entry, kind, order, collection):
+    empty = bpy.data.objects.new(name, None)
+    empty.empty_display_type = "SPHERE"
+    empty.empty_display_size = entry[3]
+    empty.location = to_blender(entry[:3])
+    empty[HITBOX_LIST] = kind
+    empty[HITBOX_ORDER] = order
+    collection.objects.link(empty)
+
+
+def add_hitbox(context, car, hitbox):
+    """Returns False if this car's hitbox is already in the scene, so a second import keeps your edits."""
+    if any(c.get(HITBOX_MARK) == car for c in bpy.data.collections):
+        return False
+    collection = bpy.data.collections.new(f"{car}_hitbox")
+    collection[HITBOX_MARK] = car
+    context.scene.collection.children.link(collection)
+    for number, planes in enumerate(hitbox.plane_groups):
+        corners, faces = hull_mesh(planes)
+        data = bpy.data.meshes.new(f"{car}_hitbox_hull_{number}")
+        # The axis change mirrors the hull, so the corner order flips to keep faces outward.
+        data.from_pydata([to_blender(corner) for corner in corners], [], [tuple(reversed(face)) for face in faces])
+        data.update()
+        hull = bpy.data.objects.new(f"hitbox_hull_{number}", data)
+        hull.display_type = "WIRE"
+        hull.hide_render = True
+        collection.objects.link(hull)
+    for kind, entries in zip(SPHERE_LISTS, (hitbox.upper_spheres, hitbox.body_spheres)):
+        for number, entry in enumerate(entries):
+            _sphere(f"hitbox_{kind}_{number}", entry, kind, number, collection)
+    return True
+
+
 def import_rom(context, path):
     """Returns False if the file added nothing, because its brake lights are already in the scene."""
     stem = Path(path).stem
@@ -247,9 +293,13 @@ def import_rom(context, path):
     params = cache / f"{car}.params"
     if params.is_file():
         add_wheels(context, params)
+    is_body = stem in [f"{car}_{level}" for level, _ in DETAIL_LEVELS]
     brake = _brake_path(cache, car, BRAKE_LEVELS[0])
-    if stem in [f"{car}_{level}" for level, _ in DETAIL_LEVELS] and brake.is_file():
+    if is_body and brake.is_file():
         add_brake_lights(context, brake, car)
+    hitbox = cache / f"{car}.hsc"
+    if is_body and hitbox.is_file():
+        add_hitbox(context, car, read_hsc(hitbox.read_bytes()))
     return True
 
 
@@ -277,7 +327,7 @@ def _body_objects(context):
     objects = [
         o for o in context.scene.objects
         if o.type == "MESH" and o.visible_get() and "rom_wheel" not in o
-        and not any(BRAKE_MARK in collection for collection in o.users_collection)
+        and not any(BRAKE_MARK in collection or HITBOX_MARK in collection for collection in o.users_collection)
     ]
     if not objects:
         raise ExportError("The scene has no visible mesh to export")
@@ -475,9 +525,61 @@ def _from_car(obj, car):
     return obj.get("rom_car") == car or obj.get("rom_source") in [f"{car}_{level}.rom" for level, _ in DETAIL_LEVELS]
 
 
+def _hull_faces(obj):
+    """The convex hull of the mesh as placed in the scene, as faces of game points."""
+    mesh = bmesh.new()
+    try:
+        mesh.from_mesh(obj.data)
+        mesh.transform(obj.matrix_world)
+        if len(mesh.verts) < 4:
+            raise ExportError(f"The hitbox hull {obj.name} needs at least 4 corners")
+        # The mesh's own faces stay in the bmesh, so only the faces the hull returns count.
+        result = bmesh.ops.convex_hull(mesh, input=list(mesh.verts), use_existing_faces=False)
+        hull = [item for item in result["geom"] if isinstance(item, bmesh.types.BMFace)]
+        return [[from_blender(tuple(vert.co)) for vert in face.verts] for face in hull]
+    finally:
+        mesh.free()
+
+
+def _sphere_entry(empty):
+    scale = [abs(value) for value in empty.matrix_world.to_scale()]
+    if max(scale) - min(scale) > SAME_SCALE * max(scale):
+        raise ExportError(f"The hitbox sphere {empty.name} is stretched. Scale it the same on all axes.")
+    return (*from_blender(tuple(empty.matrix_world.translation)), empty.empty_display_size * scale[0])
+
+
+def _hitbox_file(context, cache, car):
+    """The scene's hitbox as file data, or None when the car has no visible hitbox in the scene."""
+    collection = next((c for c in bpy.data.collections if c.get(HITBOX_MARK) == car), None)
+    if collection is None:
+        return None
+    objects = [o for o in collection.all_objects if o.visible_get()]
+    if not objects:
+        return None
+    hulls = sorted((o for o in objects if o.type == "MESH"), key=lambda o: o.name)
+    if not hulls:
+        raise ExportError(f"The hitbox collection {collection.name} has no hull mesh")
+    try:
+        groups = [planes_from_faces(_hull_faces(hull)) for hull in hulls]
+    except HscError as e:
+        raise ExportError(str(e)) from e
+    lists = {kind: [] for kind in SPHERE_LISTS}
+    for empty in (o for o in objects if o.type == "EMPTY"):
+        kind = empty.get(HITBOX_LIST)
+        if kind not in lists:
+            raise ExportError(f"{empty.name} in the hitbox is not a hitbox sphere. Duplicate one of the spheres instead.")
+        lists[kind].append(empty)
+    spheres = {kind: [_sphere_entry(o) for o in sorted(found, key=lambda o: (o.get(HITBOX_ORDER, 0), o.name))] for kind, found in lists.items()}
+    old = cache / f"{car}.hsc"
+    version = read_hsc(old.read_bytes()).version if old.is_file() else 1
+    return write_hsc(Hitbox(version, groups, spheres["upper"], spheres["body"]))
+
+
 def _project_car(context, project):
     try:
-        cars = [entry["internal_name"] for entry in json.loads((project / "cars.json").read_text(encoding="utf-8"))]
+        entries = json.loads((project / "cars.json").read_text(encoding="utf-8"))
+        # An alternate model is a whole car folder of its own, which the Smashmouth cheat loads.
+        cars = [name for entry in entries for name in (entry["internal_name"], entry.get("alternate")) if name]
     except (OSError, ValueError, LookupError, TypeError) as e:
         raise ExportError(f"{project} is not a new car project: {e}") from e
     if not cars:
@@ -522,6 +624,9 @@ def export_car(context, project):
         _fit_shadow(shadow, bounds)
         outputs[path] = write_rom(shadow)
     outputs[cache / f"{car}.pts"] = write_points(tags)
+    hitbox = _hitbox_file(context, cache, car)
+    if hitbox is not None:
+        outputs[cache / f"{car}.hsc"] = hitbox
     lights = _brake_objects(context, car)
     if lights:
         data = _brake_file(context, lights, cache, car)

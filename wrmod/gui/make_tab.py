@@ -42,6 +42,9 @@ class MakeTab(QWidget):
         self.base_team_box = QComboBox()
         self.base_team_box.addItems(merge.STOCK_TEAMS)
         self.team_button = self._button("Make a team for this car", self._ask_team)
+        self.alternate_edit = QLineEdit()
+        self.alternate_edit.setPlaceholderText("new_car_name_cheat")
+        self.alternate_button = self._button("Add a cheat model", self._ask_alternate)
         self.open_button = self._button("Open project", self._ask_open)
         self.folder_button = self._button("Open folder", self.open_folder)
         self.convert_button = self._button("Convert a texture", self._ask_convert)
@@ -90,6 +93,11 @@ class MakeTab(QWidget):
         new_team.addWidget(self.base_team_box)
         new_team.addWidget(self.team_button)
 
+        alternate = QHBoxLayout()
+        alternate.addWidget(QLabel("Smashmouth cheat model name"))
+        alternate.addWidget(self.alternate_edit, 1)
+        alternate.addWidget(self.alternate_button)
+
         project = QHBoxLayout()
         project.addWidget(self.project_label, 1)
         project.addWidget(self.folder_button)
@@ -110,6 +118,7 @@ class MakeTab(QWidget):
         layout.addLayout(start)
         layout.addLayout(new_car)
         layout.addLayout(new_team)
+        layout.addLayout(alternate)
         layout.addWidget(QLabel(NOTICE))
         layout.addLayout(project)
         layout.addLayout(form)
@@ -132,7 +141,7 @@ class MakeTab(QWidget):
         self.new_button.setEnabled(self.car_box.count() > 0)
 
     def _update_buttons(self):
-        for widget in (self.build_button, self.folder_button, self.refresh_button, self.team_button):
+        for widget in (self.build_button, self.folder_button, self.refresh_button, self.team_button, self.alternate_button):
             widget.setEnabled(self.project is not None)
 
     def _load_details(self):
@@ -202,6 +211,17 @@ class MakeTab(QWidget):
 
     def _ask_team(self):
         self.make_team(self.team_name_edit.text(), self.base_team_box.currentText())
+
+    def make_alternate(self, name):
+        try:
+            template.add_alternate(self.game, self.project, name)
+        except (template.ProjectError, OSError, ValueError) as e:
+            self.show_error(str(e))
+            return
+        self.refresh_changes()
+
+    def _ask_alternate(self):
+        self.make_alternate(self.alternate_edit.text().strip())
 
     def build(self, out):
         try:

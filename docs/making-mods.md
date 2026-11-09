@@ -49,6 +49,14 @@ A new car starts unlocked, is never written to the save, and uses the `based_on`
 
 A zip for a new car holds all of the car's files, so it is much larger than a zip that changes a stock car.
 
+**Smashmouth cheat model:** the Smashmouth cheat swaps every car that has a cheat model for that model. In stock, only Super Tuned (to Smashmouth) and Sling Shot (to Zed-36) have one. A new car has none of its own, so with the cheat on it stays as it is. To give it one, for example a movie and a game version of the same car:
+
+1. Open the car's project, type a **Smashmouth cheat model name**, such as `neon_mill_movie`, and press **Add a cheat model**.
+2. The project gets a second car folder, `files/cars/<cheat name>/`, as a copy of the base car, and `cars.json` gets `"alternate": "<cheat name>"`.
+3. In Blender, import `<cheat name>_med.rom`, change it, and export to the project, as for the car itself.
+
+The cheat model is a whole car: its own body, skin, wheels, points and hitbox. The car keeps its icon, name and stats, and the cheat shows the stock cheat icon on car select. The cheat is one switch for all cars, so every car that has a cheat model changes together.
+
 ## Give a new car its own body in Blender
 
 You need Blender 4.5.
@@ -63,13 +71,19 @@ You need Blender 4.5.
 
 If a project holds more than one car, export writes the car that you imported into the scene. Keep one of the project's cars in a scene. Export refuses a scene that has two of them, or none.
 
-Export replaces the three detail levels, fits the shadow to the new body, and updates the named points and wheels. Every visible mesh in the scene goes in, except the wheels and brake lights, so hide anything you want left out. The lower detail levels are automatic reductions of your body.
+Export replaces the three detail levels, fits the shadow to the new body, and updates the named points, wheels and hitbox. Every visible mesh in the scene goes in, except the wheels, brake lights and hitbox, so hide anything you want left out. The lower detail levels are automatic reductions of your body.
+
+**Hitbox:** import also brings in a collection called `<new name>_hitbox`, from the car's `<new name>.hsc`. A new car starts with the base car's hitbox, so fit it to your body.
+
+- `hitbox_hull_0` is a see-through mesh. Move, scale or edit it. Export uses the convex shape around its points, so a dent or a hole does not count. Stock hulls have 9 to 17 flat sides. Keep yours simple, because the game tests every side.
+- `hitbox_upper_...` and `hitbox_body_...` are spheres. Move them, and scale them the same on all axes. Export refuses a stretched sphere. To add a sphere, duplicate one from the same set. Export refuses any other object in the collection. Stock cars have 13 to 15 upper spheres, which sit in the upper body, and 15 body spheres, which cover the whole body. What the game uses each set for is not decoded yet, so keep about the stock counts.
+- If the whole collection is hidden, export leaves `<new name>.hsc` as it is. Importing again keeps your edited hitbox.
 
 **More than one texture:** a car can use several. Give each part its own material, and name the material after the texture file, in up to 19 lower case letters, digits and underscores, such as `wild_thing_engine`. Export adds the material to the car. If the texture does not exist yet, export writes a plain grey image at `textures/cars/<new name>/cache/tex_high/<material>.bog.dds`, and tells you. Paint over it and save it as DXT1 or DXT5. Build also puts it in `tex_low` for AI cars. To give AI cars a smaller version, add your own file in `tex_low`.
 
 The car's main skin has `_stunt`, `_combo` and `_reward` versions: small "hot" images, tinted orange and red, that the game fades to while those timed effects run. Extra textures have no such versions.
 
-**Scale and position:** match the base car you imported, and keep it as a guide while you place your body. Cars face -Y. Stock cars run from 3.9 to 5.8 units long. Collision does not move with the body, so choose a base car of about the right size. On Ballistik the wheel centres are at Z -0.29, and the tyres meet the ground near Z -0.72.
+**Scale and position:** match the base car you imported, and keep it as a guide while you place your body. Cars face -Y. Stock cars run from 3.9 to 5.8 units long. A base car of a similar size and shape gives a hitbox that needs less work. On Ballistik the wheel centres are at Z -0.29, and the tyres meet the ground near Z -0.72.
 
 **Named points:** the empties called `tag_...` that you imported from your project mark the headlights and tail lights, at the place the game draws them. Move them to fit your body. Empties that come in with another model are ignored at export. If your scene still has a `tag_com` empty from an older import, it does nothing, and you can delete it.
 
@@ -119,7 +133,7 @@ Save both as DXT5 at 96×48. An icon you do not change stays the base car's.
 **What stays from the base car:**
 
 - The wheel model.
-- Collision, in the `.hsc` file.
+- The hitbox, until you fit it in Blender.
 - Effects, such as boost lightning, the nose cone and the combo rings. These are shaped for the base car, so they may not line up.
 
 Cars have no rig, so there is no weight painting. Tests raced a body of 71,000 triangles, about 24 times a stock car, on one machine. A mesh is limited to 65,535 vertices.
