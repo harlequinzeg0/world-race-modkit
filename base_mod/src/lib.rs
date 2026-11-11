@@ -7,6 +7,7 @@ pub mod fixes;
 pub mod hook;
 mod log;
 pub mod pad;
+mod rims;
 pub mod saves;
 pub mod session;
 pub mod shuffle;
@@ -71,6 +72,9 @@ fn install(session: &'static Session) -> Result<(), String> {
     }
     if session.display.borderless {
         hooks.extend(window::hooks());
+    }
+    if !session.rims.is_empty() {
+        hooks.extend(rims::hooks(session)?);
     }
     let mut patches = fixes::patches();
     patches.extend(files::patches());

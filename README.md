@@ -40,13 +40,14 @@ A profile is a list of active mods with its own save.
 
 The tool keeps all its data in `%LOCALAPPDATA%\WorldRaceModkit`: `mods`, `profiles` and `settings.json`, which remembers the game folder and the Options tab choices. To use a different folder, set `WRMOD_DATA` before you start the tool.
 
-### Xbox controller and borderless window
+### Xbox controller, borderless window and rim colours
 
-Both work with every profile except Stock, and both are on by default. Change them on the **Options** tab.
+These work with every profile except Stock, and all are on by default. Change them on the **Options** tab.
 
 - **Xbox controller:** player 1 drives with any controller that Windows sees as an Xbox controller. There is nothing to set up. The left stick steers smoothly, RT accelerates, LT or Y brakes, A is handbrake, B is nitro, X changes the camera, a right stick click looks behind, and Start pauses. The D-pad also steers and flips. In menus, the stick or D-pad moves, A or Start selects, and B goes back. The keyboard keeps working. The Options tab lets you change each race action's input.
 - If you set player 1 to a controller in the game's launcher, set it back to Keyboard. Otherwise the controller acts twice. The Options tab warns you.
 - **Borderless window:** the game opens as a window with no border that covers the main monitor, at the monitor's resolution. Alt-tab, capture tools and a second monitor work as with any window. Turn it off for the old full screen at the launcher's resolution.
+- **Team rim colours:** the stock game has a rim colour for each team but never shows it, so every car has yellow rims. With this on, each car in a stock team gets its team's colour: Dune Ratz yellow, Street Breed green, Road Beasts silver, Wave Rippers blue, Scorchers red.
 
 ### NitroXFueled and other overhauls
 

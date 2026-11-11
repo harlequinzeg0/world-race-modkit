@@ -14,7 +14,7 @@ DEVICE_OFFSET = 0x225
 
 
 def test_empty_settings_give_defaults():
-    assert from_settings({}) == {"borderless": True, "controller": True, "layout": DEFAULT_LAYOUT}
+    assert from_settings({}) == {"borderless": True, "controller": True, "team_rims": True, "layout": DEFAULT_LAYOUT}
 
 
 def test_defaults_cover_every_action():
@@ -37,6 +37,11 @@ def test_bad_layout_entries_fall_back_to_defaults():
     assert "jump" not in opts["layout"]
     assert opts["borderless"] is True
     assert opts["controller"] is True
+
+
+def test_team_rims_can_be_turned_off():
+    assert from_settings({"team_rims": False})["team_rims"] is False
+    assert from_settings({"team_rims": "no"})["team_rims"] is True
 
 
 def test_a_layout_that_is_not_a_table_gives_the_defaults():

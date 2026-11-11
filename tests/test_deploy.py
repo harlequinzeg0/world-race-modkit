@@ -109,7 +109,8 @@ def test_play_passes_options_to_the_session(fake):
         seen["session"] = json.loads(Path(session).read_text(encoding="utf-8"))
         return 0
 
-    play(fake.game, fake.data, fake.profile, launcher=run, options=from_settings({"borderless": False}))
+    # The fake game has no car list, which team rims read.
+    play(fake.game, fake.data, fake.profile, launcher=run, options=from_settings({"borderless": False, "team_rims": False}))
     assert seen["session"]["display"] == {"borderless": False}
     assert seen["session"]["controller"]["enabled"] is True
 

@@ -70,6 +70,12 @@ def test_unticking_controller_disables_rows_and_saves(tab):
     assert tab.combo("nitro").isEnabled()
 
 
+def test_team_rims_box_saves(tab):
+    assert tab.team_rims_box.isChecked()
+    tab.team_rims_box.setChecked(False)
+    assert store.load_settings()["team_rims"] is False
+
+
 def test_borderless_box_saves(tab):
     tab.borderless_box.setChecked(False)
     assert store.load_settings()["borderless"] is False

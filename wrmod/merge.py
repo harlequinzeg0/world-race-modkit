@@ -444,7 +444,6 @@ def _session_tables(cars, teams, rows, own_logos):
         })
     car_table = [
         {"index": STOCK_CARS + offset, "team": team_ids.index(car["team"]), "name": car["internal_name"], "based_on": car["based_on"]}
-        | ({"rim": RIM_COLOURS.index(car["rim_colour"])} if "rim_colour" in car else {})
         for offset, (_, car) in enumerate(cars)
     ]
     return car_table, table
@@ -493,9 +492,27 @@ def _write_art(source, cars, teams, generated):
     return _Art(icons, highlights, portraits, logos)
 
 
-def _write_rim_models(source, cars, generated):
-    """All wheels share one texture and draw in one batch, so a rim colour needs its own material."""
-    for rim in {RIM_COLOURS.index(car["rim_colour"]) for _, car in cars if "rim_colour" in car} - {0}:
+def _rim_table(source, cars, team_rims):
+    """Each car's rim colour by car name, leaving out yellow, the colour every wheel has.
+
+    The game has a rim texture for each stock team but never picks it, so with `team_rims` a car
+    in a stock team gets its team's colour. A mod car's own `rim_colour` wins. The DLL picks the
+    wheels by the car's own name, which stays when the Smashmouth cheat loads another model, so a
+    cheat model needs no entry.
+    """
+    team_rim = lambda team: STOCK_TEAMS.index(team) if team_rims and team in STOCK_TEAMS else 0
+    rims = {}
+    # Stock cars are yellow without team rims, so only then does the car list need reading.
+    for element in CAR_ELEMENT.findall(source.text(CAR_INFO)) if team_rims else []:
+        rims[_attribute(element, "internal_name")] = team_rim(_attribute(element, "team_name"))
+    for _, car in cars:
+        rims[car["internal_name"]] = RIM_COLOURS.index(car["rim_colour"]) if "rim_colour" in car else team_rim(car["team"])
+    return {name: rim for name, rim in rims.items() if rim}
+
+
+def _write_rim_models(source, rims, generated):
+    """All wheels share one texture, so a rim colour needs wheel models with its own material."""
+    for rim in set(rims.values()):
         for level in WHEEL_LEVELS:
             name = f"generic_wheel_{level}.rom"
             wheel = read_rom(source.read(f"{WHEEL_FOLDER}/{name}"))
@@ -525,7 +542,6 @@ def _write_lists(source, cars, teams, generated):
     for rel in SCREENS:
         _write_generated(generated, rel, _edit_screen(source.text(rel), cars, rows, teams, rel, art, stock_names))
     _write_team_effects(source, teams, generated)
-    _write_rim_models(source, cars, generated)
     return _session_tables(cars, teams, rows, art.logos)
 
 
@@ -615,6 +631,8 @@ def build_session(game, mods_dir, active, save_dir, out_dir, options=None):
     if cars or teams:
         car_table, team_table = _write_lists(source, cars, teams, generated)
     text = _write_text(game, source, folders, _new_texts(cars), generated)
+    rims = _rim_table(source, cars, options is not None and options["team_rims"])
+    _write_rim_models(source, rims, generated)
     if is_overhaul(game):
         _write_physics(source, folders, cars, generated)
 
@@ -627,6 +645,7 @@ def build_session(game, mods_dir, active, save_dir, out_dir, options=None):
         "cars": car_table,
         "teams": team_table,
         "text": text,
+        "rims": rims,
     }
     if options is not None:
         session.update(session_fields(options))

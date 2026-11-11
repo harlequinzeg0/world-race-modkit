@@ -46,6 +46,8 @@ class OptionsTab(QWidget):
         self.borderless_box.setChecked(saved["borderless"])
         self.controller_box = QCheckBox("Use Xbox controller")
         self.controller_box.setChecked(saved["controller"])
+        self.team_rims_box = QCheckBox("Team rim colours on stock teams' cars")
+        self.team_rims_box.setChecked(saved["team_rims"])
         self._combos = {}
         for action in options.ACTIONS:
             combo = QComboBox()
@@ -60,6 +62,7 @@ class OptionsTab(QWidget):
         self._update_rows()
         # Connected last, so filling the boxes above saves nothing.
         self.borderless_box.toggled.connect(self._save)
+        self.team_rims_box.toggled.connect(self._save)
         self.controller_box.toggled.connect(self._controller_changed)
         for combo in self._combos.values():
             combo.currentIndexChanged.connect(self._save)
@@ -76,6 +79,7 @@ class OptionsTab(QWidget):
         buttons.addStretch()
         layout = QVBoxLayout(self)
         layout.addWidget(self.borderless_box)
+        layout.addWidget(self.team_rims_box)
         layout.addWidget(self.controller_box)
         layout.addWidget(self.warning)
         layout.addLayout(form)
@@ -106,6 +110,7 @@ class OptionsTab(QWidget):
         settings = store.load_settings()
         settings["borderless"] = self.borderless_box.isChecked()
         settings["controller"] = self.controller_box.isChecked()
+        settings["team_rims"] = self.team_rims_box.isChecked()
         settings["layout"] = {action: combo.currentData() for action, combo in self._combos.items()}
         store.save_settings(settings)
 

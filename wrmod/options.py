@@ -1,4 +1,5 @@
-"""Player options that WRSE uses in game: the Xbox controller layout and the borderless window.
+"""Player options that WRSE uses in game: the Xbox controller layout, the borderless window and
+team rim colours.
 
 The Mod Manager keeps them in its settings file and copies them into each session. A bad or
 missing entry gets its default, so a hand-edited settings file never stops Play.
@@ -43,6 +44,7 @@ def from_settings(settings):
     return {
         "borderless": _flag(settings.get("borderless")),
         "controller": _flag(settings.get("controller")),
+        "team_rims": _flag(settings.get("team_rims")),
         "layout": layout,
     }
 

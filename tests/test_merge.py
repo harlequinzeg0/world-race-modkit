@@ -157,14 +157,14 @@ def team_mod(team_id="neon_riders", cars=("n1", "n2", "n3")):
     return {"cars": entries, "teams": [team], "files": [f"cars/{name}/cache/{name}.pts" for name in cars]}
 
 
-def build(stock, mods, tmp_path):
+def build(stock, mods, tmp_path, options=None):
     mods_dir = tmp_path / "mods"
     active = []
     for number, mod in enumerate(mods):
         mod_id = f"mod{number}"
         make_mod(mods_dir, mod_id, **mod)
         active.append(mod_id)
-    path = build_session(stock, mods_dir, active, tmp_path / "save", tmp_path / "session")
+    path = build_session(stock, mods_dir, active, tmp_path / "save", tmp_path / "session", options)
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
@@ -768,16 +768,49 @@ def test_a_team_logo_of_the_wrong_size_stops_the_build(stock, tmp_path):
 
 def test_a_car_can_choose_its_rim_colour(stock, tmp_path):
     session = build(stock, [car_mod("neon", rim_colour="red")], tmp_path)
-    assert session["cars"][0]["rim"] == 4
+    assert session["rims"]["neon"] == 4
 
 
 def test_rim_colours_follow_the_wheel_textures(stock, tmp_path):
     session = build(stock, [car_mod("neon", rim_colour="yellow")], tmp_path)
-    assert session["cars"][0]["rim"] == 0
+    assert "neon" not in session["rims"]
 
 
-def test_a_car_with_no_rim_colour_keeps_its_teams_rims(stock, tmp_path):
-    assert "rim" not in build(stock, [car_mod("neon")], tmp_path)["cars"][0]
+def test_without_team_rims_a_car_with_no_rim_colour_stays_yellow(stock, tmp_path):
+    assert build(stock, [car_mod("neon")], tmp_path)["rims"] == {}
+
+
+TEAM_RIMS = {"team_rims": True}
+
+
+def test_team_rims_give_stock_cars_their_teams_colour(stock, tmp_path):
+    rims = build(stock, [], tmp_path, from_settings(TEAM_RIMS))["rims"]
+    assert (rims["street_breed_0"], rims["ballistic"], rims["wave_rippers_6"], rims["scorchers_3"]) == (1, 2, 3, 4)
+    assert "dune_rats_0" not in rims
+
+
+def test_team_rims_off_keeps_every_stock_car_yellow(stock, tmp_path):
+    assert build(stock, [], tmp_path, from_settings({"team_rims": False}))["rims"] == {}
+
+
+def test_a_mod_car_follows_its_teams_rim(stock, tmp_path):
+    assert build(stock, [car_mod("neon", team="wave_rippers")], tmp_path, from_settings(TEAM_RIMS))["rims"]["neon"] == 3
+
+
+def test_a_cars_own_rim_colour_beats_its_team(stock, tmp_path):
+    rims = build(stock, [car_mod("neon", team="wave_rippers", rim_colour="yellow")], tmp_path, from_settings(TEAM_RIMS))["rims"]
+    assert "neon" not in rims
+
+
+def test_a_car_in_an_added_team_stays_yellow(stock, tmp_path):
+    rims = build(stock, [team_mod()], tmp_path, from_settings(TEAM_RIMS))["rims"]
+    assert not {"n1", "n2", "n3"} & set(rims)
+
+
+@pytest.mark.parametrize("rim", [1, 2, 3, 4])
+def test_team_rims_make_every_team_wheel_model(stock, tmp_path, rim):
+    build(stock, [], tmp_path, from_settings(TEAM_RIMS))
+    assert [m.name for m in read_rom(rim_model(tmp_path, rim, "med").read_bytes()).materials] == [f"generic_wheel_high_{rim}"]
 
 
 def rim_model(tmp_path, rim, level):

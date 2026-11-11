@@ -23,9 +23,6 @@ const SET_BOX: usize = 0x43CBE0;
 const QUICK_RACE_SETUP: usize = 0x48FB00;
 const LEAGUE_SETUP: usize = 0x499E40;
 const SET_UP_RACE_CAR: usize = 0x45D9C0;
-const LOAD_CAR_MODELS: usize = 0x46FA30;
-const WHEEL_FOLDER: usize = 0x470380;
-const STOCK_WHEEL_FOLDER: usize = 0x5EFEFC;
 const LEFT_WRAP: usize = 0x420DF9;
 const RIGHT_WRAP: usize = 0x420E8B;
 
@@ -57,7 +54,6 @@ const OFF_SCREEN_X: f32 = 10.0;
 
 type Unary = unsafe extern "thiscall" fn(*mut u8);
 type Named = unsafe extern "thiscall" fn(*mut c_void, *const i8) -> *mut c_void;
-type LoadCarModels = unsafe extern "thiscall" fn(*mut u8, *const u8, i32, i32) -> u8;
 type SetUpRaceCar = unsafe extern "thiscall" fn(*mut u8, u32, *const i8, *const i8) -> u8;
 
 static LOAD_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
@@ -69,9 +65,7 @@ static LAYOUT_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static LOGOS_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static QUICK_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static LEAGUE_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
-static CAR_MODELS_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
 static RACE_CAR_ORIGINAL: AtomicUsize = AtomicUsize::new(0);
-static WHEEL_FOLDER_NOW: AtomicUsize = AtomicUsize::new(STOCK_WHEEL_FOLDER);
 
 static CARS_MADE: AtomicU32 = AtomicU32::new(0);
 static SHAPE: OnceLock<Shape> = OnceLock::new();
@@ -83,7 +77,6 @@ struct Shape {
     width: usize,
     box_fallbacks: HashMap<String, CString>,
     logos: Vec<(CString, CString)>,
-    rim_folders: HashMap<String, CString>,
 }
 
 struct Car {
@@ -333,25 +326,6 @@ unsafe extern "thiscall" fn quick_detour(this: *mut u8) {
     restore_numbers();
 }
 
-/// The game never selects a car's wheel texture, because the field that check reads is never set,
-/// and it draws all wheels in one batch, so one shared texture cannot differ between cars. A wheel
-/// model with its own material can, so a car with a rim colour loads its own copy.
-unsafe extern "thiscall" fn car_models_detour(this: *mut u8, car: *const u8, level: i32, count: i32) -> u8 {
-    let name = CStr::from_ptr(read(car, CAR_NAME) as *const i8).to_string_lossy();
-    if let Some(folder) = shape().rim_folders.get(name.as_ref()) {
-        WHEEL_FOLDER_NOW.store(folder.as_ptr() as usize, Ordering::SeqCst);
-        log::line(&format!("{name} loads wheels from {}", folder.to_string_lossy()));
-    }
-    let original: LoadCarModels = std::mem::transmute(CAR_MODELS_ORIGINAL.load(Ordering::SeqCst));
-    let result = original(this, car, level, count);
-    WHEEL_FOLDER_NOW.store(STOCK_WHEEL_FOLDER, Ordering::SeqCst);
-    result
-}
-
-unsafe extern "C" fn wheel_folder_detour() -> usize {
-    WHEEL_FOLDER_NOW.load(Ordering::SeqCst)
-}
-
 /// The team number picks the stunt combo and the combo effect colours. Quick Race makes its cars
 /// while the opponent shuffle has changed the numbers, but the HUD shows the combo of the number
 /// that comes back after it, so the car keeps its own number here.
@@ -389,11 +363,7 @@ fn make_shape(session: &Session) -> Result<Shape, String> {
             logos.push((c_string(&logo.texture)?, c_string(&logo.box_name)?));
         }
     }
-    let mut rim_folders = HashMap::new();
-    for (car, folder) in teams::rim_folders(session) {
-        rim_folders.insert(car, c_string(&folder)?);
-    }
-    Ok(Shape { teams: session.teams.len(), width: teams::width(session), box_fallbacks, logos, rim_folders })
+    Ok(Shape { teams: session.teams.len(), width: teams::width(session), box_fallbacks, logos })
 }
 
 fn value(address: usize, old: u32, new: u32) -> Patch {
@@ -459,8 +429,6 @@ fn hooks() -> Vec<Hook> {
         site(LAYOUT_ICONS, &[0x83, 0xEC, 0x1C, 0x53, 0x55], layout_detour as usize, &LAYOUT_ORIGINAL),
         site(TEAM_LOGOS, &[0x56, 0x8B, 0xF1, 0x57, 0x33, 0xFF], logos_detour as usize, &LOGOS_ORIGINAL),
         site(QUICK_RACE_SETUP, &[0x83, 0xEC, 0x2C, 0x53, 0x55], quick_detour as usize, &QUICK_ORIGINAL),
-        site(LOAD_CAR_MODELS, &[0x81, 0xEC, 0x50, 0x02, 0x00, 0x00], car_models_detour as usize, &CAR_MODELS_ORIGINAL),
-        Hook { address: WHEEL_FOLDER, expected: &[0xB8, 0xFC, 0xFE, 0x5E, 0x00], detour: wheel_folder_detour as usize, original: None },
         site(LEAGUE_SETUP, &[0x81, 0xEC, 0x5C, 0x01, 0x00, 0x00], league_detour as usize, &LEAGUE_ORIGINAL),
         site(SET_UP_RACE_CAR, &[0x8B, 0x44, 0x24, 0x04, 0x81, 0xEC, 0x0C, 0x01, 0x00, 0x00], race_car_detour as usize, &RACE_CAR_ORIGINAL),
     ]

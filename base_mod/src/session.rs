@@ -35,6 +35,9 @@ pub struct Session {
     pub display: Display,
     #[serde(default)]
     pub controller: Controller,
+    /// Wheel texture by car name, for cars whose rims are not yellow.
+    #[serde(default)]
+    pub rims: HashMap<String, u32>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -58,9 +61,6 @@ pub struct Car {
     pub team: usize,
     pub name: String,
     pub based_on: String,
-    /// The wheel texture to use. Without one, the car's rims follow its team number.
-    #[serde(default)]
-    pub rim: Option<u32>,
 }
 
 /// A row on the car select screen. `slots` holds indexes into the merged car list, in order.
@@ -119,8 +119,8 @@ pub fn parse(text: &str) -> Result<Session, String> {
         return Err("session file has no file roots".to_string());
     }
     check_teams(&session)?;
-    if let Some(car) = session.cars.iter().find(|car| car.rim.is_some_and(|rim| rim >= RIM_COLOURS)) {
-        return Err(format!("car {} has a rim colour past the {RIM_COLOURS} wheel textures", car.name));
+    if let Some(car) = session.rims.iter().find(|(_, rim)| **rim >= RIM_COLOURS).map(|(car, _)| car) {
+        return Err(format!("car {car} has a rim colour past the {RIM_COLOURS} wheel textures"));
     }
     if let Some((name, id)) = session.text.iter().find(|(_, id)| **id < STOCK_TEXT) {
         return Err(format!("new text {name} has the stock ID {id}"));
@@ -178,23 +178,21 @@ mod tests {
     }
 
     #[test]
-    fn a_car_needs_no_rim_colour() {
-        let session = parse(&with_teams(ADDED_CAR, &format!("[{},{ADDED_TEAM}]", stock_teams()))).unwrap();
-        assert_eq!(session.cars[0].rim, None);
+    fn a_session_needs_no_rims() {
+        assert!(parse(GOOD).unwrap().rims.is_empty());
     }
 
     #[test]
-    fn a_car_can_choose_a_stock_rim_colour() {
-        let car = ADDED_CAR.replace(r#""team": 5,"#, r#""team": 5, "rim": 4,"#);
-        let session = parse(&with_teams(&car, &format!("[{},{ADDED_TEAM}]", stock_teams()))).unwrap();
-        assert_eq!(session.cars[0].rim, Some(4));
+    fn reads_the_rim_colours() {
+        let text = GOOD.replace(r#"{"format": 1,"#, r#"{"format": 1, "rims": {"ballistic": 2},"#);
+        assert_eq!(parse(&text).unwrap().rims["ballistic"], 2);
     }
 
     #[test]
     fn refuses_a_rim_colour_past_the_wheel_textures() {
-        let car = ADDED_CAR.replace(r#""team": 5,"#, r#""team": 5, "rim": 5,"#);
-        let error = parse(&with_teams(&car, &format!("[{},{ADDED_TEAM}]", stock_teams()))).unwrap_err();
-        assert!(error.contains("neon"), "{error}");
+        let text = GOOD.replace(r#"{"format": 1,"#, r#"{"format": 1, "rims": {"ballistic": 5},"#);
+        let error = parse(&text).unwrap_err();
+        assert!(error.contains("ballistic"), "{error}");
     }
 
     #[test]
