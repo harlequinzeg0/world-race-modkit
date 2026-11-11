@@ -73,11 +73,12 @@ fn install(session: &'static Session) -> Result<(), String> {
     if session.display.borderless {
         hooks.extend(window::hooks());
     }
-    if !session.rims.is_empty() {
-        hooks.extend(rims::hooks(session)?);
-    }
     let mut patches = fixes::patches();
     patches.extend(files::patches());
+    if !session.rims.is_empty() {
+        hooks.extend(rims::hooks(session)?);
+        patches.extend(rims::patches());
+    }
     if !session.teams.is_empty() {
         let (car_hooks, car_patches) = cars::parts(session)?;
         hooks.extend(car_hooks);
