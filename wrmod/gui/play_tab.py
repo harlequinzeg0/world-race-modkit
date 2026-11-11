@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import deploy, modpack, profiles, store
+from .. import deploy, modpack, options, profiles, store
 from ..conflicts import find_conflicts
 from .worker import PlayWorker
 
@@ -289,7 +289,7 @@ class PlayTab(QWidget):
         return self._worker is not None
 
     def play(self):
-        self._worker = PlayWorker(self.game, store.data_dir(), self.profile)
+        self._worker = PlayWorker(self.game, store.data_dir(), self.profile, options.from_settings(store.load_settings()))
         self._worker.finished_code.connect(self._play_finished)
         self._worker.failed.connect(self._play_failed)
         self._update_status()

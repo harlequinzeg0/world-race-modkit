@@ -38,7 +38,15 @@ A profile is a list of active mods with its own save.
 - You can turn mods on and off and keep the profile's save. Added cars and teams do not change the save format.
 - To back up a profile's progress, copy its `PROGRESS` file while the game is closed. To start a profile with your stock progress, copy `<game folder>\saves\HOTWHEEL\PROGRESS` into the profile's `save\HOTWHEEL` folder.
 
-The tool keeps all its data in `%LOCALAPPDATA%\WorldRaceModkit`: `mods`, `profiles` and `settings.json`, which remembers the game folder. To use a different folder, set `WRMOD_DATA` before you start the tool.
+The tool keeps all its data in `%LOCALAPPDATA%\WorldRaceModkit`: `mods`, `profiles` and `settings.json`, which remembers the game folder and the Options tab choices. To use a different folder, set `WRMOD_DATA` before you start the tool.
+
+### Xbox controller and borderless window
+
+Both work with every profile except Stock, and both are on by default. Change them on the **Options** tab.
+
+- **Xbox controller:** player 1 drives with any controller that Windows sees as an Xbox controller. There is nothing to set up. The left stick steers smoothly, RT accelerates, LT or Y brakes, A is handbrake, B is nitro, X changes the camera, a right stick click looks behind, and Start pauses. The D-pad also steers and flips. In menus, the stick or D-pad moves, A or Start selects, and B goes back. The keyboard keeps working. The Options tab lets you change each race action's input.
+- If you set player 1 to a controller in the game's launcher, set it back to Keyboard. Otherwise the controller acts twice. The Options tab warns you.
+- **Borderless window:** the game opens as a window with no border that covers the main monitor, at the monitor's resolution. Alt-tab, capture tools and a second monitor work as with any window. Turn it off for the old full screen at the launcher's resolution.
 
 ### NitroXFueled and other overhauls
 
@@ -67,7 +75,7 @@ The tool never changes your original EXE, `harchive`, or stock save. Mods stay i
 3. Starts the stock game with that session.
 4. When the game exits, removes `dinput8.dll`.
 
-The base mod is the World Race Script Extender, in `base_mod/`. It loads with the game, serves mod files from their own folders, moves saves to the profile, and adds cars and teams. With no session it only forwards input calls, so a leftover copy leaves the game stock. If the tool finds another program's `dinput8.dll` in the game folder, it stops and leaves that file alone.
+The base mod is the World Race Script Extender, in `base_mod/`. It loads with the game, serves mod files from their own folders, moves saves to the profile, adds cars and teams, reads the Xbox controller, and opens the borderless window. With no session it only forwards input calls, so a leftover copy leaves the game stock. If the tool finds another program's `dinput8.dll` in the game folder, it stops and leaves that file alone.
 
 If the game or the tool crashes, the tool removes the DLL at its next start. You can also run `worldrace.py recover`.
 
@@ -96,7 +104,7 @@ uv run --script worldrace.py recover --game PATH
 
 ## Status
 
-Works now: texture, physics and text mods, new cars beside the stock ones, new car bodies through a Blender 4.5 add-on, car icons, new teams, new cars and teams as AI opponents, zips, profiles, Play on the unchanged stock EXE, and the NitroXFueled 1.3 overhaul.
+Works now: an Xbox controller for player 1, a borderless window, texture, physics and text mods, new cars beside the stock ones, new car bodies through a Blender 4.5 add-on, car icons, new teams, new cars and teams as AI opponents, zips, profiles, Play on the unchanged stock EXE, and the NitroXFueled 1.3 overhaul.
 
 Not tested yet: a mod's own render clip in the game. On NitroXFueled, new car projects made from an overhaul car do not yet export its PNG and JPEG textures for editing.
 

@@ -40,6 +40,7 @@ from .modpack import (
 )
 from .physics import PhysicsError, rebase, stock_physics
 from .msg import LANGUAGES, apply_edits, load_string_ids, msg_path, new_text_ids, resolve_edits
+from .options import session_fields
 from .rom import read_rom, write_rom
 
 SESSION_FORMAT = 1
@@ -596,8 +597,11 @@ def _mod_folders(mods_dir, active):
     return folders
 
 
-def build_session(game, mods_dir, active, save_dir, out_dir):
-    """Write session.json and generated files to out_dir, and return the session path."""
+def build_session(game, mods_dir, active, save_dir, out_dir, options=None):
+    """Write session.json and generated files to out_dir, and return the session path.
+
+    `options` comes from `options.from_settings`. Without it, WRSE leaves input and the window stock.
+    """
     out_dir = Path(out_dir).resolve()
     _check_paths(mods_dir, save_dir, out_dir)
     folders = _mod_folders(mods_dir, active)
@@ -624,6 +628,8 @@ def build_session(game, mods_dir, active, save_dir, out_dir):
         "teams": team_table,
         "text": text,
     }
+    if options is not None:
+        session.update(session_fields(options))
     path = out_dir / SESSION_FILE
     path.write_text(json.dumps(session, indent=2), encoding="utf-8")
     return path

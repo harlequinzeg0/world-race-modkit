@@ -2,12 +2,15 @@
 use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::sync::OnceLock;
+use std::time::Instant;
 
 static PATH: OnceLock<String> = OnceLock::new();
+static START: OnceLock<Instant> = OnceLock::new();
 
 /// Starts a new log for this run. Only the first call has any effect.
 pub fn init(path: &str) {
     if PATH.set(path.to_string()).is_ok() {
+        START.get_or_init(Instant::now);
         let _ = File::create(path);
     }
 }
@@ -15,7 +18,9 @@ pub fn init(path: &str) {
 pub fn line(text: &str) {
     if let Some(path) = PATH.get() {
         if let Ok(mut file) = OpenOptions::new().append(true).open(path) {
-            let _ = writeln!(file, "{text}");
+            // Milliseconds since start, so game test logs show what happened when.
+            let elapsed = START.get().map_or(0, |start| start.elapsed().as_millis());
+            let _ = writeln!(file, "[{elapsed:>7}] {text}");
         }
     }
 }

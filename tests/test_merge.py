@@ -17,6 +17,7 @@ from wrmod.modpack import OVERHAUL_TAG
 from wrmod.physics import read_physics
 from test_physics import OVERHAUL as OVERHAUL_PARAMS, STOCK as STOCK_PARAMS
 from wrmod.msg import LANGUAGES, STRING_COUNT, msg_path, read_msg, write_msg
+from wrmod.options import from_settings
 from wrmod.rom import Material, Rom, read_rom, write_rom
 
 TEAMS = ("dune_rats", "street_breed", "road_beasts", "wave_rippers", "scorchers")
@@ -540,6 +541,20 @@ def test_a_rebuild_clears_old_files(stock, tmp_path):
     assert stale.is_file()
     build_session(stock, tmp_path / "mods", [], tmp_path / "save", tmp_path / "session")
     assert not stale.exists()
+
+
+def test_session_holds_options(stock, tmp_path):
+    path = build_session(stock, tmp_path / "mods", [], tmp_path / "save", tmp_path / "session", options=from_settings({}))
+    session = json.loads(path.read_text(encoding="utf-8"))
+    assert session["display"]["borderless"] is True
+    assert session["controller"]["layout"]["nitro"] == "b"
+
+
+def test_session_without_options_has_no_new_fields(stock, tmp_path):
+    path = build_session(stock, tmp_path / "mods", [], tmp_path / "save", tmp_path / "session")
+    session = json.loads(path.read_text(encoding="utf-8"))
+    assert "display" not in session
+    assert "controller" not in session
 
 
 def test_merge_on_the_real_stock_files(game_dir, tmp_path):

@@ -9,15 +9,16 @@ class PlayWorker(QThread):
     finished_code = Signal(object)
     failed = Signal(str)
 
-    def __init__(self, game, data, profile):
+    def __init__(self, game, data, profile, options):
         super().__init__()
         self._game = game
         self._data = data
         self._profile = profile
+        self._options = options
 
     def run(self):
         # Any error must reach the window, or it stays locked as "running" forever.
         try:
-            self.finished_code.emit(deploy.play(self._game, self._data, self._profile))
+            self.finished_code.emit(deploy.play(self._game, self._data, self._profile, options=self._options))
         except Exception as e:
             self.failed.emit(f"{type(e).__name__}: {e}")

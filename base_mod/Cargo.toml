@@ -1,6 +1,6 @@
 [package]
 name = "dinput8"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "World Race Script Extender: the base mod for Hot Wheels World Race"
 

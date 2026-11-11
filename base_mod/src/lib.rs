@@ -1,16 +1,20 @@
 //! World Race Script Extender: a `dinput8.dll` proxy for the stock game.
 //! With no `WRSE_SESSION`, it only forwards input calls, so a leftover DLL leaves the game stock.
 mod cars;
+mod controls;
 mod files;
 pub mod fixes;
 pub mod hook;
 mod log;
+pub mod pad;
 pub mod saves;
 pub mod session;
 pub mod shuffle;
 pub mod teams;
 pub mod text;
 pub mod vfs;
+mod window;
+mod xinput;
 
 use session::Session;
 use std::ffi::{c_void, CString, OsStr};
@@ -62,6 +66,12 @@ fn install(session: &'static Session) -> Result<(), String> {
     let mut hooks = files::hooks();
     hooks.extend(saves::hooks(&session.save_dir)?);
     hooks.extend(text::hooks(session));
+    if session.controller.enabled {
+        hooks.extend(controls::hooks(session));
+    }
+    if session.display.borderless {
+        hooks.extend(window::hooks());
+    }
     let mut patches = fixes::patches();
     patches.extend(files::patches());
     if !session.teams.is_empty() {

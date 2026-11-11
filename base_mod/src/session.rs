@@ -1,4 +1,5 @@
 //! The session file that the Python tool writes before launch.
+use crate::pad::Layout;
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -29,6 +30,25 @@ pub struct Session {
     /// New text names and their IDs in the merged .msg files.
     #[serde(default)]
     pub text: HashMap<String, u32>,
+    /// A session from before 0.5.0 has neither, so the game keeps its stock window and input.
+    #[serde(default)]
+    pub display: Display,
+    #[serde(default)]
+    pub controller: Controller,
+}
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Display {
+    pub borderless: bool,
+}
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Controller {
+    pub enabled: bool,
+    #[serde(default)]
+    pub layout: Layout,
 }
 
 /// An added car. `index` is its place in the merged `car_info.xml`.
@@ -111,6 +131,7 @@ pub fn parse(text: &str) -> Result<Session, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::pad::Input;
 
     const GOOD: &str = r#"{"format": 1, "roots": ["D:/gen", "D:/mod"], "save_dir": "D:/save", "log_path": "D:/wrse.log"}"#;
 
@@ -246,6 +267,38 @@ mod tests {
         let text = GOOD.replace(r#""format": 1"#, &format!(r#""format": {}"#, FORMAT + 1));
         let error = parse(&text).unwrap_err();
         assert!(error.contains("format"), "{error}");
+    }
+
+    const OPTIONS: &str = r#""display": {"borderless": true}, "controller": {"enabled": true, "layout": {"accelerate": "rt", "brake": "lt", "second_brake": "y",
+        "steer": "left_stick", "flip": "left_stick", "handbrake": "b", "nitro": "y", "camera_change": "x", "camera_behind": "right_stick_click"}},"#;
+
+    fn with_options(options: &str) -> String {
+        GOOD.replace(r#"{"format": 1,"#, &format!(r#"{{"format": 1, {options}"#))
+    }
+
+    #[test]
+    fn an_old_session_has_no_controller_and_no_borderless() {
+        let session = parse(GOOD).unwrap();
+        assert!(!session.controller.enabled);
+        assert!(!session.display.borderless);
+    }
+
+    #[test]
+    fn reads_the_options() {
+        let session = parse(&with_options(OPTIONS)).unwrap();
+        assert!(session.controller.enabled && session.display.borderless);
+        assert_eq!(session.controller.layout.nitro, Input::Y);
+    }
+
+    #[test]
+    fn refuses_an_unknown_button() {
+        let error = parse(&with_options(&OPTIONS.replace(r#""nitro": "y""#, r#""nitro": "z""#))).unwrap_err();
+        assert!(error.contains('z'), "{error}");
+    }
+
+    #[test]
+    fn refuses_a_button_for_steering() {
+        assert!(parse(&with_options(&OPTIONS.replace(r#""steer": "left_stick""#, r#""steer": "a""#))).is_err());
     }
 
     #[test]

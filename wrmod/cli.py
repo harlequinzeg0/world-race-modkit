@@ -4,7 +4,7 @@ import sys
 from hashlib import sha256
 from pathlib import Path
 
-from . import addon, bark, bog, deploy, modpack, profiles, store, template
+from . import addon, bark, bog, deploy, modpack, options, profiles, store, template
 from .gamefiles import game_files
 from .gameinfo import GameError, check_game_folder
 
@@ -75,7 +75,7 @@ def _cmd_play(args):
     profile = profiles.load(store.profiles_dir(), args.profile)
     for rel in deploy.ignored_files(store.mods_dir(), profile.active):
         print(f"warning: the game cannot load {rel} from a mod", file=sys.stderr)
-    code = deploy.play(game, store.data_dir(), profile)
+    code = deploy.play(game, store.data_dir(), profile, options=options.from_settings(store.load_settings()))
     print(f"Game exited with code {code}")
 
 

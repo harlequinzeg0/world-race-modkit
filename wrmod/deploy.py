@@ -121,7 +121,7 @@ def _check_dll_slot(target):
         raise DeployError(f"{target} is not this tool's file. Move it out of the game folder to play with mods.")
 
 
-def prepare(game, data, profile):
+def prepare(game, data, profile, options=None):
     """Write the session and put the DLL in place. Return the session path."""
     game, data = Path(game), Path(data)
     if game_running():
@@ -134,7 +134,7 @@ def prepare(game, data, profile):
     try:
         _check_mod_files(mods_dir, profile.active)
         move_old_save(profiles_dir, profile.name)
-        session = build_session(game, mods_dir, profile.active, save_dir(profiles_dir, profile.name), _deploy_dir(data) / SESSION_DIR)
+        session = build_session(game, mods_dir, profile.active, save_dir(profiles_dir, profile.name), _deploy_dir(data) / SESSION_DIR, options)
         _write_manifest(data, {"game": str(game), "dll": _digest(DLL_SOURCE)})
     except (MergeError, ModError, OSError) as e:
         raise DeployError(str(e)) from e
@@ -157,7 +157,7 @@ def launch(exe, game, session=None):
     return subprocess.Popen([str(exe), LAUNCH_FLAG], cwd=game, env=env).wait()
 
 
-def play(game, data, profile, launcher=launch):
+def play(game, data, profile, launcher=launch, options=None):
     game = Path(game)
     if profile.name == STOCK:
         if game_running():
@@ -167,7 +167,7 @@ def play(game, data, profile, launcher=launch):
             return launcher(game / STOCK_EXE, game, None)
         except OSError as e:
             raise DeployError(str(e)) from e
-    session = prepare(game, data, profile)
+    session = prepare(game, data, profile, options)
     try:
         return launcher(game / STOCK_EXE, game, session)
     except OSError as e:

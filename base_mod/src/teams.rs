@@ -61,6 +61,8 @@ mod tests {
             cars: Vec::new(),
             teams: rows.iter().map(|r| team(r)).collect(),
             text: Default::default(),
+            display: Default::default(),
+            controller: Default::default(),
         }
     }
 

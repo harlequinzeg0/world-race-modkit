@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 from .. import __version__, deploy, gameinfo, profiles, store
 from ..gameinfo import GameError, check_game_folder
 from .make_tab import MakeTab
+from .options_tab import OptionsTab
 from .play_tab import PlayTab
 
 TITLE = "World Race Mod Manager"
@@ -32,10 +33,12 @@ class MainWindow(QMainWindow):
         self.resize(900, 620)
         self.play_tab = PlayTab(None)
         self.make_tab = MakeTab(None)
+        self.options_tab = OptionsTab()
 
         tabs = QTabWidget()
         tabs.addTab(self.play_tab, "Play with mods")
         tabs.addTab(self.make_tab, "Make a mod")
+        tabs.addTab(self.options_tab, "Options")
 
         self.folder_button = QPushButton("Game folder")
         self.folder_button.clicked.connect(self._change_folder)
@@ -110,6 +113,7 @@ class MainWindow(QMainWindow):
         game = self._resolve_game(path)
         self.play_tab.set_game(game)
         self.make_tab.set_game(game)
+        self.options_tab.set_game(game)
         if not game:
             return
         settings = store.load_settings()

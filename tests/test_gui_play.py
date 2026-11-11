@@ -215,6 +215,13 @@ def test_first_run_asks_for_folder_when_no_setting(window, tmp_path, monkeypatch
     assert window.play_tab.play_button.isEnabled()
 
 
+def test_options_tab_gets_the_game(window, tmp_path, monkeypatch):
+    accept_folders(monkeypatch)
+    window.ask_folder = lambda: str(tmp_path)
+    window.start()
+    assert window.options_tab.game == str(tmp_path)
+
+
 def test_cancelled_folder_leaves_play_disabled(window):
     window.ask_folder = lambda: None
     window.start()
@@ -307,12 +314,12 @@ def test_game_folder_button_locked_while_game_runs(window, monkeypatch):
 
 
 def test_unexpected_error_in_play_reaches_the_window(qapp, tmp_path, monkeypatch):
-    def broken(*args):
+    def broken(*args, **kwargs):
         raise KeyError("phase")
 
     monkeypatch.setattr(worker_module.deploy, "play", broken)
     seen = []
-    worker = worker_module.PlayWorker(tmp_path, tmp_path, None)
+    worker = worker_module.PlayWorker(tmp_path, tmp_path, None, None)
     worker.failed.connect(seen.append)
     worker.run()
     assert seen and "phase" in seen[0]
@@ -332,8 +339,8 @@ def test_startup_disk_error_is_shown(window, tmp_path, monkeypatch):
 
 def test_worker_reports_a_crash_exit_code(qapp, monkeypatch):
     # Windows crash codes do not fit a signed 32-bit integer.
-    monkeypatch.setattr(worker_module.deploy, "play", lambda game, data, profile: 0xC0000005)
-    worker = worker_module.PlayWorker("game", "data", None)
+    monkeypatch.setattr(worker_module.deploy, "play", lambda game, data, profile, options: 0xC0000005)
+    worker = worker_module.PlayWorker("game", "data", None, None)
     codes, failures = [], []
     worker.finished_code.connect(codes.append, Qt.DirectConnection)
     worker.failed.connect(failures.append, Qt.DirectConnection)

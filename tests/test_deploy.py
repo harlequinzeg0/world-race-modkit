@@ -7,6 +7,7 @@ from wrmod import deploy as dep
 from wrmod.deploy import DLL_NAME, SESSION_VARIABLE, DeployError, ignored_files, launch, play, prepare, restore
 from wrmod.gameinfo import RETAIL_SHA256, STOCK_EXE
 from wrmod.merge import SESSION_FILE
+from wrmod.options import from_settings
 from wrmod.profiles import Profile, save_path
 
 SAVE_REL = "saves/HOTWHEEL/PROGRESS"
@@ -99,6 +100,24 @@ def test_launcher_gets_the_stock_exe_and_the_session(fake):
     fake.run(run)
     assert seen["exe"] == STOCK_EXE
     assert seen["session"]["roots"][1].endswith("mods/a/files")
+
+
+def test_play_passes_options_to_the_session(fake):
+    seen = {}
+
+    def run(exe, game, session):
+        seen["session"] = json.loads(Path(session).read_text(encoding="utf-8"))
+        return 0
+
+    play(fake.game, fake.data, fake.profile, launcher=run, options=from_settings({"borderless": False}))
+    assert seen["session"]["display"] == {"borderless": False}
+    assert seen["session"]["controller"]["enabled"] is True
+
+
+def test_stock_play_ignores_options(fake):
+    seen = []
+    play(fake.game, fake.data, Profile("Stock", []), launcher=lambda exe, game, session: seen.append(session) or 0, options=from_settings({}))
+    assert seen == [None]
 
 
 def test_stock_exe_never_changes(fake):
